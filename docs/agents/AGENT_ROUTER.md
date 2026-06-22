@@ -18,14 +18,14 @@
 | Intake | Product / PM, UX Researcher | Trend Researcher | 目标、用户、范围、非目标、疑问清单 |
 | Product | Product Manager, Project Manager Senior | Sprint Prioritizer | PRD、MVP、用户故事、验收标准 |
 | UX/UI | UI Designer, UX Architect | Brand Guardian, Accessibility Auditor | 页面清单、流程、状态、组件、设计约束 |
-| Architecture | Software Architect, Backend Architect, Security Architect | Database Optimizer, SRE | 架构、模块边界、数据流、技术选型 ADR |
+| Architecture | Software Architect, Backend Architect, Security Architect | Database Optimizer, SRE, Performance Benchmarker | 架构、模块边界、数据流、技术选型 ADR、交付形态决策、性能预算 |
 | Contract | Backend Architect, Frontend Developer | API Tester, Technical Writer | API、字段、错误码、权限、数据模型、mock |
 | Scaffold | DevOps Automator, Frontend Developer 或 Backend Architect | SRE | 官方脚手架命令、依赖选择、目录结构 |
 | Build Frontend | Frontend Developer | UI Designer, Accessibility Auditor | 页面、组件、状态、接口接入、前端验证 |
 | Build Backend | Backend Architect, Senior Developer | Database Optimizer, Security Architect | API、service、repository、迁移、后端验证 |
 | Build AI | AI Engineer, Prompt Engineer | Security Architect | Prompt、schema、限流、熔断、审计 |
 | Integration | API Tester, Frontend Developer, Backend Architect | QA / Testing | 联调记录、契约修正、回归验证 |
-| QA/Security | Code Reviewer, API Tester, Security Engineer | Performance Benchmarker | 测试报告、安全审查、阻塞清单 |
+| QA/Security | Code Reviewer, API Tester, Security Engineer, Performance Benchmarker | SRE | 测试报告、安全审查、性能检查、阻塞清单 |
 | Release | DevOps Automator, SRE, Technical Writer | Incident Response Commander | 发布清单、回滚、监控、文档 |
 
 ## 任务路由规则
@@ -40,6 +40,7 @@
 | AI 能力 | AI Engineer / Prompt Engineer | 模型调用散落在 UI 或业务函数 |
 | 测试验证 | QA / API Tester / Code Reviewer | 实现智能体自称已验证但无证据 |
 | 安全风险 | Security Engineer / Security Architect | 为了进度跳过权限、密钥、日志脱敏 |
+| 性能卡顿 | Performance Benchmarker / SRE / Frontend Developer / Backend Architect | 项目小就不做性能检查 |
 | 发布部署 | DevOps Automator / SRE | 未写回滚和监控就交付 |
 | 文档说明 | Technical Writer / Docs | 代码改了但文档不同步 |
 

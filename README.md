@@ -86,6 +86,7 @@ AGENTS.md
 docs/process/AI_ENFORCEMENT.md
 docs/process/PROJECT_LIFECYCLE.md
 docs/process/TECH_DECISION.md
+docs/process/PERFORMANCE_BASELINE.md
 docs/agents/AGENT_ROUTER.md
 CLAUDE.md
 GEMINI.md
@@ -94,7 +95,7 @@ GEMINI.md
 PROJECT_PROGRESS.md
 ```
 
-这些文件用于约束不同 AI 工具：开工前必须读规范，项目型任务必须按生命周期阶段推进，主会话只做沟通、派发、验收和整合，专项实现必须交给专业子智能体，技术选型必须考虑安全、性能、维护性、稳定性和可替换性，交付前必须输出质量门禁结果。
+这些文件用于约束不同 AI 工具：开工前必须读规范，项目型任务必须按生命周期阶段推进，主会话只做沟通、派发、验收和整合，专项实现必须交给专业子智能体，技术选型必须考虑安全、性能、维护性、稳定性和可替换性，交付形态不能默认全栈一体，核心路径必须设定性能预算并验证，交付前必须输出质量门禁结果。
 
 检查当前项目是否具备强制约束入口：
 
@@ -132,6 +133,7 @@ docs/process/CONTEXT_BUDGET.md
 docs/process/MINIMAL_IMPLEMENTATION.md
 docs/process/AI_ENFORCEMENT.md
 docs/process/TECH_DECISION.md
+docs/process/PERFORMANCE_BASELINE.md
 docs/process/QA_STRATEGY.md
 docs/process/STANDARDS_EVOLUTION.md
 docs/workflows/WORKFLOW_TEMPLATE.md
@@ -258,6 +260,8 @@ docs/diagrams/project-workflow.drawio
 - 不让重复任务停留在口头经验；出现 3 次以上必须沉淀为模板、脚本或工作流。
 - 不把无关文件、完整日志和大型命令输出塞进 AI 上下文；先摘要、定位、分段读取，必要时使用 `rtk` 等压缩输出工具。
 - 不默认写复杂实现；先判断是否需要做，再优先使用标准库、平台原生能力和已有依赖。
+- 不默认把项目做成全栈一体；必须先比较交付形态，说明为什么选择当前形态，以及对性能、部署、维护和后续替换的影响。
+- 不把性能优化留到上线后；核心路径、列表、图表、文件、AI、数据库、SSR 或全栈 API 必须先设定性能预算，交付时给出性能检查结果。
 - 不跳过需求、架构、测试、安全和发布门禁。
 - 不把 AI 输出直接写入用户最终内容，必须可审阅、可回滚、可追踪。
 - 不提交密钥、真实用户数据、本地配置、临时截图和构建产物。

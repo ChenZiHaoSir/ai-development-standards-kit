@@ -19,6 +19,7 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - For mandatory AI execution rules, read `docs/process/AI_ENFORCEMENT.md` when available.
    - For project lifecycle gating, read `docs/process/PROJECT_LIFECYCLE.md` when available.
    - For technology choices or dependency changes, read `docs/process/TECH_DECISION.md` when available.
+   - For delivery shape, full-stack decisions, core paths, responsiveness, or stutter risks, read `docs/process/PERFORMANCE_BASELINE.md` when available.
    - For ambiguous tasks, repeated tasks, self-review, project manuals, or reusable workflows, read `docs/process/AI_WORKFLOW_FACTORY.md` when available.
    - For implementation planning or code review, read `references/minimal-implementation.md`.
    - For new project setup, read `references/project-scaffold.md`.
@@ -37,6 +38,7 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - `docs/process/AI_ENFORCEMENT.md`
    - `docs/process/PROJECT_LIFECYCLE.md`
    - `docs/process/TECH_DECISION.md`
+   - `docs/process/PERFORMANCE_BASELINE.md`
    - `docs/process/CONTEXT_BUDGET.md`
    - `docs/process/MINIMAL_IMPLEMENTATION.md`
    - `docs/process/QA_STRATEGY.md`
@@ -69,6 +71,8 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
 - After producing plans, architecture, important docs, important code, or release steps, run a self-review pass and revise.
 - Before starting implementation, read `AGENTS.md` and `docs/process/AI_ENFORCEMENT.md`; before choosing frameworks, dependencies, storage, auth, deployment, UI libraries, testing tools, or AI SDKs, read `docs/process/TECH_DECISION.md`.
 - Do not choose technology only because it is fastest to implement; evaluate security, maintainability, stability, performance, ecosystem compatibility, delivery speed, and replaceability.
+- Do not default to a full-stack/all-in-one delivery shape. Compare full-stack, frontend/backend split, static site, API service, mobile, mini-program, or desktop as applicable, and explain performance, deployment, maintenance, and replaceability tradeoffs before implementation.
+- For core user paths, lists, charts, file operations, AI calls, database queries, SSR, full-stack API routes, or interaction feedback, set a performance budget from `docs/process/PERFORMANCE_BASELINE.md` and verify it before claiming completion.
 - When a task repeats three or more times, propose a reusable workflow under `docs/workflows/`.
 - Prefer the project's existing framework conventions over inventing a new structure.
 - Keep generated standards concise enough to be read, but concrete enough to enforce.

@@ -12,11 +12,12 @@ AI 必须在开始任务前读取并遵守以下文件：
 4. `docs/process/PROJECT_LIFECYCLE.md`
 5. `docs/process/MINIMAL_IMPLEMENTATION.md`
 6. `docs/process/TECH_DECISION.md`
-7. `docs/process/QA_STRATEGY.md`
-8. `docs/process/LANGUAGE_POLICY.md`
-9. `docs/agents/MAIN_SESSION_CONTROL.md`
-10. `docs/agents/AGENT_ROUTER.md`
-11. 当前任务相关的专业文档，例如 `docs/agents/`、`docs/security/`、`docs/release/`
+7. `docs/process/PERFORMANCE_BASELINE.md`
+8. `docs/process/QA_STRATEGY.md`
+9. `docs/process/LANGUAGE_POLICY.md`
+10. `docs/agents/MAIN_SESSION_CONTROL.md`
+11. `docs/agents/AGENT_ROUTER.md`
+12. 当前任务相关的专业文档，例如 `docs/agents/`、`docs/security/`、`docs/release/`
 
 未读取这些文件时，不得直接开始写代码。
 
@@ -49,6 +50,8 @@ AI 开始执行前必须先给出简短执行声明：
 - 不得手搓已有成熟依赖能稳定解决的问题；新增依赖前必须说明原因，并优先使用项目已安装依赖、标准库和框架能力。
 - 技术选型不得只按最快实现决定，必须优先评估安全性、可维护性、稳定性、性能、生态兼容、交付效率和可替换性。
 - 涉及框架、数据库、组件库、状态管理、ORM、鉴权、部署、测试工具、AI SDK 等关键选型时，必须按 `docs/process/TECH_DECISION.md` 输出评分和 ADR。
+- 不得默认选择全栈一体开发。必须先比较全栈一体、前后端分离、静态站、API 服务等交付形态，并说明为什么选择当前形态。
+- 涉及核心路径、列表、图表、文件、AI、数据库、SSR、全栈 API 或用户交互反馈时，必须按 `docs/process/PERFORMANCE_BASELINE.md` 设定性能预算并验证。
 - 不得绕过既有架构边界，把 UI、业务逻辑、数据库、外部 SDK、AI 模型调用混在同一层。
 - 不得跳过错误处理、加载态、空状态、权限校验、输入校验、日志脱敏和回滚路径。
 - 不得提交密钥、token、真实用户数据、本地绝对路径、临时文件和构建产物。

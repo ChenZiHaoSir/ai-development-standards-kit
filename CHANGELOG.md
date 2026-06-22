@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.23.0
+
+- 新增 `docs/process/PERFORMANCE_BASELINE.md`，要求小项目也必须设定性能预算，避免随机卡顿、页面冻结、重复请求和无边界数据加载。
+- 强化技术选型门禁：不得默认选择全栈一体，必须比较交付形态并说明性能、部署、维护和可替换性影响。
+- 将性能基线接入 `AI_ENFORCEMENT`、AI 工具规则、Codex skill、`standards check` 和 `standards guard`。
+
 ## 0.22.0
 
 - 新增 `docs/process/PROJECT_LIFECYCLE.md`，强制项目从 0 到 1 按阶段推进，禁止主会话跳过开发文档直接写代码。
