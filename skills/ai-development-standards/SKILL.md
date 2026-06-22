@@ -20,6 +20,9 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - For project lifecycle gating, read `docs/process/PROJECT_LIFECYCLE.md` when available.
    - For technology choices or dependency changes, read `docs/process/TECH_DECISION.md` when available.
    - For delivery shape, full-stack decisions, core paths, responsiveness, or stutter risks, read `docs/process/PERFORMANCE_BASELINE.md` when available.
+   - For prototype review, interaction review, test case review, test submission, product acceptance, or pre-release acceptance, read `docs/process/ACCEPTANCE_GATES.md` when available.
+   - For logs, monitoring, analytics events, alerts, post-release observation, or data redaction, read `docs/process/OBSERVABILITY_BASELINE.md` when available.
+   - For release, gray rollout, full rollout, rollback, or production observation, read `docs/release/RELEASE_PLAN.md` when available.
    - For ambiguous tasks, repeated tasks, self-review, project manuals, or reusable workflows, read `docs/process/AI_WORKFLOW_FACTORY.md` when available.
    - For implementation planning or code review, read `references/minimal-implementation.md`.
    - For new project setup, read `references/project-scaffold.md`.
@@ -39,6 +42,8 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - `docs/process/PROJECT_LIFECYCLE.md`
    - `docs/process/TECH_DECISION.md`
    - `docs/process/PERFORMANCE_BASELINE.md`
+   - `docs/process/ACCEPTANCE_GATES.md`
+   - `docs/process/OBSERVABILITY_BASELINE.md`
    - `docs/process/CONTEXT_BUDGET.md`
    - `docs/process/MINIMAL_IMPLEMENTATION.md`
    - `docs/process/QA_STRATEGY.md`
@@ -48,6 +53,7 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - `docs/process/STANDARDS_LOCAL_PATCHES.md`
    - `docs/process/STANDARDS_UPSTREAM_PROPOSALS.md`
    - `docs/security/SECURITY.md`
+   - `docs/release/RELEASE_PLAN.md`
    - `docs/release/RELEASE_CHECKLIST.md`
    - `docs/agents/MAIN_SESSION_CONTROL.md`
    - `docs/agents/AGENT_ROUTER.md`
@@ -73,6 +79,9 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
 - Do not choose technology only because it is fastest to implement; evaluate security, maintainability, stability, performance, ecosystem compatibility, delivery speed, and replaceability.
 - Do not default to a full-stack/all-in-one delivery shape. Compare full-stack, frontend/backend split, static site, API service, mobile, mini-program, or desktop as applicable, and explain performance, deployment, maintenance, and replaceability tradeoffs before implementation.
 - For core user paths, lists, charts, file operations, AI calls, database queries, SSR, full-stack API routes, or interaction feedback, set a performance budget from `docs/process/PERFORMANCE_BASELINE.md` and verify it before claiming completion.
+- Prototype review, interaction review, high-level design review, scheduling review, test case review, test submission, product second acceptance, and pre-release experience checks must be recorded through `docs/process/ACCEPTANCE_GATES.md`.
+- Before release, require `docs/release/RELEASE_PLAN.md` with gray/full rollout strategy, rollback conditions, owner, and post-release observation.
+- Before full rollout, require `docs/process/OBSERVABILITY_BASELINE.md` coverage for error logs, performance monitoring, core analytics events, alerts, and data redaction.
 - When a task repeats three or more times, propose a reusable workflow under `docs/workflows/`.
 - Prefer the project's existing framework conventions over inventing a new structure.
 - Keep generated standards concise enough to be read, but concrete enough to enforce.

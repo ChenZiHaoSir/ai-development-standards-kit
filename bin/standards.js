@@ -320,6 +320,9 @@ function checkKit() {
     "docs/process/PROJECT_LIFECYCLE.md",
     "docs/process/TECH_DECISION.md",
     "docs/process/PERFORMANCE_BASELINE.md",
+    "docs/process/ACCEPTANCE_GATES.md",
+    "docs/process/OBSERVABILITY_BASELINE.md",
+    "docs/release/RELEASE_PLAN.md",
     "docs/agents/AGENT_ORCHESTRATION.md",
     "docs/agents/AGENT_ROUTER.md",
     "docs/workflows/WORKFLOW_TEMPLATE.md",
@@ -353,6 +356,8 @@ function guardProject() {
     "docs/process/MINIMAL_IMPLEMENTATION.md",
     "docs/process/TECH_DECISION.md",
     "docs/process/PERFORMANCE_BASELINE.md",
+    "docs/process/ACCEPTANCE_GATES.md",
+    "docs/process/OBSERVABILITY_BASELINE.md",
     "docs/process/QA_STRATEGY.md",
     "docs/process/LANGUAGE_POLICY.md",
     "PROJECT_PROGRESS.md",
@@ -364,6 +369,7 @@ function guardProject() {
 
   const recommended = [
     "docs/security/SECURITY_BASELINE.md",
+    "docs/release/RELEASE_PLAN.md",
     "docs/release/RELEASE_CHECKLIST.md",
     "docs/agents/MAIN_SESSION_CONTROL.md",
     "docs/agents/AGENT_ORCHESTRATION.md",

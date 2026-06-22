@@ -26,7 +26,9 @@
 | Build AI | AI Engineer, Prompt Engineer | Security Architect | Prompt、schema、限流、熔断、审计 |
 | Integration | API Tester, Frontend Developer, Backend Architect | QA / Testing | 联调记录、契约修正、回归验证 |
 | QA/Security | Code Reviewer, API Tester, Security Engineer, Performance Benchmarker | SRE | 测试报告、安全审查、性能检查、阻塞清单 |
-| Release | DevOps Automator, SRE, Technical Writer | Incident Response Commander | 发布清单、回滚、监控、文档 |
+| Acceptance | Product Manager, QA, UX Architect | DevOps Automator, SRE | 产品二次验收、预发布体验、偏差清单、发布建议 |
+| Release | DevOps Automator, SRE, Technical Writer | Incident Response Commander | 发布计划、发布清单、灰度/全量、回滚、文档 |
+| Monitor | SRE, Analytics Reporter, Backend Architect | Security Engineer, Performance Benchmarker | 错误日志、性能指标、埋点统计、核心业务指标、发布观察结论 |
 
 ## 任务路由规则
 
@@ -41,7 +43,9 @@
 | 测试验证 | QA / API Tester / Code Reviewer | 实现智能体自称已验证但无证据 |
 | 安全风险 | Security Engineer / Security Architect | 为了进度跳过权限、密钥、日志脱敏 |
 | 性能卡顿 | Performance Benchmarker / SRE / Frontend Developer / Backend Architect | 项目小就不做性能检查 |
-| 发布部署 | DevOps Automator / SRE | 未写回滚和监控就交付 |
+| 验收门禁 | Product Manager / QA / UX Architect | 未做原型、交互、提测、产品或预发布验收就继续推进 |
+| 发布部署 | DevOps Automator / SRE | 未写发布计划、回滚和监控就交付 |
+| 监控埋点 | SRE / Analytics Reporter / Backend Architect | 上线后才补错误日志、核心埋点和告警 |
 | 文档说明 | Technical Writer / Docs | 代码改了但文档不同步 |
 
 ## 派发模板

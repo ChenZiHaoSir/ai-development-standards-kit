@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.24.0
+
+- 新增 `docs/process/ACCEPTANCE_GATES.md`，把原型评审、交互设计评审、概要设计评审、排期评审、测试用例评审、提测、产品二次验收和预发布体验变成强制门禁。
+- 新增 `docs/process/OBSERVABILITY_BASELINE.md`，要求上线前明确错误日志、性能监控、核心埋点、告警和数据脱敏规则。
+- 新增 `docs/release/RELEASE_PLAN.md`，要求发布前明确灰度/全量策略、回滚条件、发布后观察和负责人。
+- 扩展生命周期到 Acceptance、Release、Monitor 阶段，并接入 AI 强制入口、AI 工具规则、Codex skill、路由表、`standards check` 和 `standards guard`。
+
 ## 0.23.0
 
 - 新增 `docs/process/PERFORMANCE_BASELINE.md`，要求小项目也必须设定性能预算，避免随机卡顿、页面冻结、重复请求和无边界数据加载。

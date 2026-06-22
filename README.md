@@ -87,6 +87,8 @@ docs/process/AI_ENFORCEMENT.md
 docs/process/PROJECT_LIFECYCLE.md
 docs/process/TECH_DECISION.md
 docs/process/PERFORMANCE_BASELINE.md
+docs/process/ACCEPTANCE_GATES.md
+docs/process/OBSERVABILITY_BASELINE.md
 docs/agents/AGENT_ROUTER.md
 CLAUDE.md
 GEMINI.md
@@ -95,7 +97,7 @@ GEMINI.md
 PROJECT_PROGRESS.md
 ```
 
-这些文件用于约束不同 AI 工具：开工前必须读规范，项目型任务必须按生命周期阶段推进，主会话只做沟通、派发、验收和整合，专项实现必须交给专业子智能体，技术选型必须考虑安全、性能、维护性、稳定性和可替换性，交付形态不能默认全栈一体，核心路径必须设定性能预算并验证，交付前必须输出质量门禁结果。
+这些文件用于约束不同 AI 工具：开工前必须读规范，项目型任务必须按生命周期阶段推进，主会话只做沟通、派发、验收和整合，专项实现必须交给专业子智能体，技术选型必须考虑安全、性能、维护性、稳定性和可替换性，交付形态不能默认全栈一体，核心路径必须设定性能预算并验证，原型、交互、测试用例、提测、产品二次验收、预发布、发布计划、监控和埋点都必须通过门禁，交付前必须输出质量门禁结果。
 
 检查当前项目是否具备强制约束入口：
 
@@ -134,11 +136,14 @@ docs/process/MINIMAL_IMPLEMENTATION.md
 docs/process/AI_ENFORCEMENT.md
 docs/process/TECH_DECISION.md
 docs/process/PERFORMANCE_BASELINE.md
+docs/process/ACCEPTANCE_GATES.md
+docs/process/OBSERVABILITY_BASELINE.md
 docs/process/QA_STRATEGY.md
 docs/process/STANDARDS_EVOLUTION.md
 docs/workflows/WORKFLOW_TEMPLATE.md
 standards-upstream.example.json
 docs/security/SECURITY_BASELINE.md
+docs/release/RELEASE_PLAN.md
 docs/release/RELEASE_CHECKLIST.md
 docs/agents/AGENT_ROUTER.md
 templates/
@@ -262,6 +267,8 @@ docs/diagrams/project-workflow.drawio
 - 不默认写复杂实现；先判断是否需要做，再优先使用标准库、平台原生能力和已有依赖。
 - 不默认把项目做成全栈一体；必须先比较交付形态，说明为什么选择当前形态，以及对性能、部署、维护和后续替换的影响。
 - 不把性能优化留到上线后；核心路径、列表、图表、文件、AI、数据库、SSR 或全栈 API 必须先设定性能预算，交付时给出性能检查结果。
+- 不跳过原型评审、交互评审、概要设计评审、排期评审、测试用例评审、提测门禁、产品二次验收和预发布体验。
+- 不在缺少发布计划、灰度/全量策略、回滚条件、错误日志、性能监控、核心埋点和告警规则时发布。
 - 不跳过需求、架构、测试、安全和发布门禁。
 - 不把 AI 输出直接写入用户最终内容，必须可审阅、可回滚、可追踪。
 - 不提交密钥、真实用户数据、本地配置、临时截图和构建产物。
