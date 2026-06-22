@@ -22,6 +22,7 @@ docs/process/ENGINEERING_WORKFLOW.md
 docs/process/MINIMAL_IMPLEMENTATION.md
 docs/process/QA_STRATEGY.md
 docs/process/STANDARDS_EVOLUTION.md
+standards-upstream.example.json
 docs/security/SECURITY_BASELINE.md
 docs/release/RELEASE_CHECKLIST.md
 templates/
@@ -93,3 +94,4 @@ docs/agents/PROJECT_STATUS_BOARD.md
 - 不提交密钥、真实用户数据、本地配置、临时截图和构建产物。
 - 不让规范停留在文档，必须进入模板、CI、Review、检查清单和自动扫描。
 - 下游项目可以自动记录并执行本地规范补丁；上游规范只能自动提案，必须由维护者审核后合并。
+- 即使规范以压缩包或文件夹形式分发，也必须通过 `standards-upstream.example.json` 或 `STANDARDS_UPSTREAM_CONFIG.json` 记录上游 Git 地址，便于 AI 提交候选优化。

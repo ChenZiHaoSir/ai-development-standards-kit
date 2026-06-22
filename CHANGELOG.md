@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+- 新增上游仓库配置模板，支持压缩包或普通文件夹分发时仍能提交规范优化提案。
+- 将当前 Gitee 仓库写入 `standards-upstream.example.json` 和 `templates/STANDARDS_UPSTREAM_CONFIG.json`。
+- 更新规范演进流程，要求 AI 提交上游提案前读取上游配置。
+
 ## 0.3.0
 
 - 新增规范演进闭环：反馈记录、本地补丁、上游提案和维护者审核门禁。

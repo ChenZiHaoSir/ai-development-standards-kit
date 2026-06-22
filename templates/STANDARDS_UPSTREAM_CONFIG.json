@@ -1,0 +1,16 @@
+{
+  "name": "ai-development-standards-kit",
+  "primaryRemote": "https://gitee.com/czh1126/ai-development-standards-kit.git",
+  "mirrors": [
+    {
+      "name": "github",
+      "url": ""
+    }
+  ],
+  "defaultBranch": "main",
+  "proposalBranchPrefix": "proposal/standards-",
+  "proposalCommitPrefix": "proposal: 优化开发规范-",
+  "maintainerReviewRequired": true,
+  "allowAutoMerge": false
+}
+

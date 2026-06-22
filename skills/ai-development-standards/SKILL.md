@@ -25,6 +25,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
    - `docs/process/MINIMAL_IMPLEMENTATION.md`
    - `docs/process/QA_STRATEGY.md`
    - `docs/process/STANDARDS_EVOLUTION.md`
+   - `docs/process/STANDARDS_UPSTREAM_CONFIG.json`
    - `docs/process/STANDARDS_FEEDBACK.md`
    - `docs/process/STANDARDS_LOCAL_PATCHES.md`
    - `docs/process/STANDARDS_UPSTREAM_PROPOSALS.md`
@@ -48,6 +49,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
 - If `agency-agents` is installed, recommend specific specialist agents by task; do not claim that they ran unless they actually were invoked by the user/tooling.
 - Default to a main-session control model: one user-facing orchestrator conversation, specialist worker conversations for single-skill execution, and a status board maintained by the orchestrator.
 - When standards gaps are discovered in a downstream project, record local patches and upstream proposals. Local patches may take effect immediately in that project; upstream changes must be submitted as reviewable proposals and never auto-merged.
+- If the kit is provided as a folder or zip, read `STANDARDS_UPSTREAM_CONFIG.json` or `standards-upstream.example.json` to find the upstream Git remote before preparing a proposal.
 
 ## Common Prompts
 
