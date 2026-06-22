@@ -19,6 +19,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
    - For main-session multi-agent control, read `references/main-session-control.md`.
    - For standards feedback, local patches, or upstream improvement proposals, read `references/standards-evolution.md`.
    - For reviews or completion checks, read `references/quality-gates.md`.
+   - If the kit was provided as a repo URL, zip, or folder, read the repository `README.md` and `docs/AI_BOOTSTRAP.md` first, then run `./scripts/bootstrap-ai-standards.sh` when available.
 3. Produce or update the smallest useful set of artifacts:
    - `AGENTS.md`
    - `docs/process/DEVELOPMENT_STANDARDS.md`

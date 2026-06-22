@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.0
+
+- 新增 AI 自动引导流程，支持用户只提供仓库地址、压缩包或文件夹。
+- 新增 `scripts/bootstrap-ai-standards.sh`，统一安装 skill 和可选 RTK。
+- 新增 `docs/AI_BOOTSTRAP.md`，明确 AI 读取 README 后的自动安装、降级和等待用户需求规则。
+
 ## 0.9.0
 
 - 新增 `scripts/setup-rtk.sh`，支持自动检测、安装和初始化 RTK。
