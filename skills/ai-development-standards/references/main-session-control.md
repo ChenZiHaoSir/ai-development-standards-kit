@@ -13,6 +13,7 @@ Default operating model:
 - Ask clarification questions when missing context would change the result: goal, audience, scope, inputs, constraints, output format, and success criteria.
 - Maintain project status: goal, phase, milestone, task board, blockers, risks, validation, next step.
 - Split work into specialist tasks with clear `/goal`, inputs, outputs, allowed files, forbidden files, and acceptance criteria.
+- Keep a continuous task queue. After each worker returns, validate the result, update the status board, derive the next executable tasks, and keep dispatching until the project is complete, paused by the user, or blocked by a decision that requires the user.
 - Decide what can run in parallel and what must run serially.
 - Require each specialist to produce its own artifact before implementation starts.
 - Coordinate integration requests between specialist workers.
@@ -116,8 +117,18 @@ Do not parallelize when workers would edit the same files, guess the same contra
 
 ## Task Board
 
-| ID | Task | Specialist | Status | Deliverable | Risk |
+| ID | Task | Specialist | Status | Deliverable | Acceptance | Next |
+| --- | --- | --- | --- | --- | --- | --- |
+
+## Next Task Queue
+
+| ID | Task | Trigger | Specialist | Parallelizable | Dependency |
 | --- | --- | --- | --- | --- | --- |
+
+## User Decisions
+
+| ID | Decision | Impact | Recommendation | Status |
+| --- | --- | --- | --- | --- |
 
 ## Integration Requests
 
