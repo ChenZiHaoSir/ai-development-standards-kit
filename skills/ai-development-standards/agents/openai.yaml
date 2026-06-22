@@ -1,0 +1,7 @@
+interface:
+  display_name: "AI Development Standards"
+  short_description: "工程规范、质量门禁与 Agent 工作流"
+  brand_color: "#2563EB"
+  default_prompt: "Use $ai-development-standards to initialize development standards, quality gates, and agent workflow for this repository."
+policy:
+  allow_implicit_invocation: true
