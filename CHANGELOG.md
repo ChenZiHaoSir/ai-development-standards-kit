@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.13.0
+
+- 新增 npm CLI 包配置，支持发布后通过 `npx ai-development-standards-kit init` 初始化项目。
+- 新增 `bin/standards.js`，支持 `init`、`install-skill`、`setup-rtk`、`check` 和 `version` 命令。
+- 新增 LICENSE、`.npmignore` 和 npm 发布文件清单。
+
 ## 0.12.0
 
 - 融合 AI Workflow Factory 思想，新增 `docs/process/AI_WORKFLOW_FACTORY.md`。

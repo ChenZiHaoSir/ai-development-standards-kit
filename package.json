@@ -1,0 +1,42 @@
+{
+  "name": "ai-development-standards-kit",
+  "version": "0.13.0",
+  "description": "AI development standards kit and project bootstrap CLI.",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "ai-development-standards-kit": "bin/standards.js",
+    "standards": "bin/standards.js"
+  },
+  "files": [
+    "bin/",
+    "docs/",
+    "scripts/",
+    "skills/",
+    "templates/",
+    "AGENTS.md",
+    "CHANGELOG.md",
+    "README.md",
+    "RTK.md",
+    "LICENSE",
+    "standards-upstream.example.json"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "ai",
+    "codex",
+    "standards",
+    "workflow",
+    "agents",
+    "developer-tools"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChenZiHaoSir/ai-development-standards-kit.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

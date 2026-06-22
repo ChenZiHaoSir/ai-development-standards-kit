@@ -51,7 +51,25 @@ chmod +x ./scripts/bootstrap-ai-standards.sh
 docs/AI_BOOTSTRAP.md
 ```
 
-### 2. 作为新项目规范模板
+### 2. 通过 npx 初始化项目
+
+发布到 npm 后，用户可以在自己的项目根目录执行：
+
+```bash
+npx ai-development-standards-kit init
+```
+
+常用选项：
+
+```bash
+npx ai-development-standards-kit init --skip-rtk
+npx ai-development-standards-kit init --force
+npx ai-development-standards-kit check
+```
+
+`init` 会复制规范文档、状态看板、工作流模板和上游配置，安装 Codex skill，并尝试初始化 RTK。默认不会覆盖已存在文件，除非传入 `--force`。
+
+### 3. 作为新项目规范模板
 
 在新项目根目录复制或引用这些文件：
 
@@ -73,7 +91,7 @@ docs/release/RELEASE_CHECKLIST.md
 templates/
 ```
 
-### 3. 作为 Codex skill
+### 4. 作为 Codex skill
 
 本仓库内置 skill：
 
@@ -93,7 +111,7 @@ skills/ai-development-standards/
 使用 $ai-development-standards 审查当前功能是否满足开发规范。
 ```
 
-### 4. 安装 RTK 上下文压缩工具
+### 5. 安装 RTK 上下文压缩工具
 
 RTK 是推荐的可选增强工具，用于压缩命令输出、减少 token 噪声，不会改变项目代码产出逻辑。
 
@@ -103,7 +121,7 @@ RTK 是推荐的可选增强工具，用于压缩命令输出、减少 token 噪
 
 后续用户把本规范喂给 AI 后，AI 应先检测 `rtk` 是否存在；缺失时可以按本脚本自动安装，安装失败则降级使用普通命令并控制输出长度。
 
-### 5. 作为 Agent 编排手册
+### 6. 作为 Agent 编排手册
 
 详见：
 
