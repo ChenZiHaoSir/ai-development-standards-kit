@@ -4,12 +4,12 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-echo "== AI Development Standards Kit bootstrap =="
+echo "== AI 开发规范包自动初始化 =="
 
 if [[ -f README.md ]]; then
-  echo "README.md found. AI should read it before using this kit."
+  echo "已找到 README.md。AI 使用前必须先读取 README 和 docs/AI_BOOTSTRAP.md。"
 else
-  echo "Missing README.md. This does not look like the standards kit root." >&2
+  echo "缺少 README.md。当前目录不像规范包根目录。" >&2
   exit 1
 fi
 
@@ -21,15 +21,15 @@ else
 fi
 
 if [[ "${SKIP_RTK:-0}" == "1" ]]; then
-  echo "Skipping RTK setup because SKIP_RTK=1."
+  echo "检测到 SKIP_RTK=1，跳过 RTK 初始化。"
 elif [[ -x scripts/setup-rtk.sh ]]; then
-  scripts/setup-rtk.sh || echo "RTK setup failed or needs manual installation. Continue with bounded normal commands."
+  scripts/setup-rtk.sh || echo "RTK 初始化失败或需要手动安装。后续使用普通命令并控制输出长度。"
 else
-  echo "scripts/setup-rtk.sh not found. Continue without RTK."
+  echo "未找到 scripts/setup-rtk.sh。后续不使用 RTK。"
 fi
 
 echo
-echo "Bootstrap complete."
+echo "初始化完成。"
 echo
-echo "Next prompt for the user:"
-echo "请描述你的项目需求。之后我会使用 \$ai-development-standards 建立开发规范、项目状态看板、专业交付物门禁和多智能体工作流。"
+echo "下一步请提示用户："
+echo "请描述你的项目需求。之后我会使用 \$ai-development-standards 建立开发规范、项目状态看板、专业交付物门禁和多智能体工作流。后续除代码、命令、路径、API 字段、配置项和专有名词外，我会默认使用简体中文。"

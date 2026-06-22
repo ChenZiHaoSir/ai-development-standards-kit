@@ -47,7 +47,8 @@ chmod +x ./scripts/bootstrap-ai-standards.sh
 ```
 
 8. 如果 RTK 安装失败，不阻塞后续流程，改用普通命令并遵守 `docs/process/CONTEXT_BUDGET.md`。
-9. 安装完成后，AI 不应立刻创建业务项目，必须先请用户描述项目需求。
+9. 读取 `docs/process/LANGUAGE_POLICY.md`，并确认后续默认使用简体中文。
+10. 安装完成后，AI 不应立刻创建业务项目，必须先请用户描述项目需求。
 
 ## 仓库地址处理示例
 
@@ -71,6 +72,7 @@ cd ai-development-standards-kit
 
 ```text
 规范包已安装完成。请描述你的项目需求、目标用户、核心功能、技术偏好和交付形式。
+后续除代码、命令、路径、API 字段、配置项和专有名词外，我会默认使用简体中文生成文档和汇报进度。
 ```
 
 用户提供需求后，AI 应使用：
@@ -90,3 +92,4 @@ Use $ai-development-standards to initialize development standards and agent work
 - 不得在未确认项目目录时把规范文件写入错误位置。
 - 不得把本规范包本身当成用户业务项目。
 - 如果 AI 环境不能联网、不能解压或不能执行 shell，必须把缺失能力明确告诉用户，并给出手动命令。
+- 不得默认生成英文项目文档；除非用户明确要求英文或中英双语。

@@ -23,6 +23,7 @@ docs/
   process/
     DEVELOPMENT_STANDARDS.md
     ENGINEERING_WORKFLOW.md
+    LANGUAGE_POLICY.md
     CONTEXT_BUDGET.md
     QA_STRATEGY.md
     RISK_REGISTER.md
@@ -40,6 +41,7 @@ docs/
 
 Minimum new-project checklist:
 
+- Generated documents and progress reports use Simplified Chinese by default unless the user explicitly asks otherwise.
 - Product main path and MVP non-goals are written.
 - Specialist deliverables exist or are explicitly marked not applicable: PRD, UI/UX spec, frontend spec, API spec, data model, QA plan, security, release runbook.
 - Framework and directory conventions are selected.

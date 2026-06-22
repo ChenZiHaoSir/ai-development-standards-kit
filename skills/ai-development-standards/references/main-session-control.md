@@ -9,6 +9,7 @@ Default operating model:
 
 ## Orchestrator Responsibilities
 
+- Communicate with the user in Simplified Chinese by default, and require specialist deliverables to be written in Simplified Chinese unless the user explicitly asks otherwise.
 - Maintain project status: goal, phase, milestone, task board, blockers, risks, validation, next step.
 - Split work into specialist tasks with clear `/goal`, inputs, outputs, allowed files, forbidden files, and acceptance criteria.
 - Decide what can run in parallel and what must run serially.

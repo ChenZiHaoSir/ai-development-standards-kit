@@ -35,6 +35,8 @@ cd ai-development-standards-kit
 
 完成后，用户只需要继续描述自己的项目需求即可。AI 会使用 `$ai-development-standards` 接管项目规范、状态看板、专业交付物、质量门禁和多智能体工作流。
 
+默认语言：除代码、命令、路径、API 字段、配置项和专有名词外，AI 必须使用简体中文生成文档和汇报进度。详见 `docs/process/LANGUAGE_POLICY.md`。
+
 如果脚本不可执行，AI 应先执行：
 
 ```bash
@@ -57,6 +59,7 @@ README.md
 AGENTS.md
 docs/process/DEVELOPMENT_STANDARDS.md
 docs/process/ENGINEERING_WORKFLOW.md
+docs/process/LANGUAGE_POLICY.md
 docs/process/CONTEXT_BUDGET.md
 docs/process/MINIMAL_IMPLEMENTATION.md
 docs/process/QA_STRATEGY.md
@@ -146,6 +149,7 @@ docs/diagrams/project-workflow.drawio
 ## 项目底线
 
 - 不以“能跑”为完成标准，以“用户能稳定完成目标”为完成标准。
+- 不默认生成英文项目文档；中文用户场景下，规范、进度、计划、评审和交付物正文必须默认简体中文。
 - 不把无关文件、完整日志和大型命令输出塞进 AI 上下文；先摘要、定位、分段读取，必要时使用 `rtk` 等压缩输出工具。
 - 不默认写复杂实现；先判断是否需要做，再优先使用标准库、平台原生能力和已有依赖。
 - 不跳过需求、架构、测试、安全和发布门禁。

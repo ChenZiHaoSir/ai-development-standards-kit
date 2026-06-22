@@ -7,12 +7,15 @@ description: Use this skill when starting a new software project, setting up pro
 
 Use this skill to apply the user's reusable project governance baseline: development standards, architecture boundaries, security rules, QA gates, release checks, and `agency-agents` orchestration.
 
+Default output language is Simplified Chinese. Except for code, commands, paths, API fields, config keys, database fields, protocol names, library names, framework names, error codes, and unavoidable proper nouns, generated documents and progress reports must be written in Simplified Chinese unless the user explicitly asks for another language.
+
 ## Workflow
 
 1. Identify the project type: frontend, backend, full-stack, desktop, mobile, AI service, data service, or mixed.
 2. Read the relevant references:
    - Always read `references/core-standards.md`.
    - For repo exploration, command output, logs, or worker-agent handoffs, read `references/context-budget.md`.
+   - For language requirements, read the repository `docs/process/LANGUAGE_POLICY.md` when available.
    - For implementation planning or code review, read `references/minimal-implementation.md`.
    - For new project setup, read `references/project-scaffold.md`.
    - For Agent orchestration, read `references/agent-playbook.md`.
@@ -24,6 +27,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
    - `AGENTS.md`
    - `docs/process/DEVELOPMENT_STANDARDS.md`
    - `docs/process/ENGINEERING_WORKFLOW.md`
+   - `docs/process/LANGUAGE_POLICY.md`
    - `docs/process/CONTEXT_BUDGET.md`
    - `docs/process/MINIMAL_IMPLEMENTATION.md`
    - `docs/process/QA_STRATEGY.md`
@@ -46,6 +50,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
 ## Operating Rules
 
 - Do not weaken the security, testing, release, or architecture baseline without an explicit user decision.
+- Default to Simplified Chinese for user-facing communication and generated project documents. Translate third-party English template text before final delivery.
 - Prefer the project's existing framework conventions over inventing a new structure.
 - Keep generated standards concise enough to be read, but concrete enough to enforce.
 - Apply context-budget discipline: summarize before expanding, prefer failure output over success noise, send worker agents only the context they need, and preserve raw-output paths for long logs. If `rtk` is missing and tool bootstrap is allowed, run `./scripts/setup-rtk.sh`; if installation fails, continue with bounded normal commands.
