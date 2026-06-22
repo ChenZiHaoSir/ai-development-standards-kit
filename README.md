@@ -72,6 +72,13 @@ docs/agents/SPECIALIST_DELIVERABLES.md
 docs/agents/PROJECT_STATUS_BOARD.md
 ```
 
+工作流图：
+
+```text
+docs/diagrams/project-workflow.png
+docs/diagrams/project-workflow.drawio
+```
+
 默认工作流：
 
 ```text
