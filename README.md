@@ -72,6 +72,7 @@ standards init --skip-rtk
 standards init --force
 standards check
 standards guard
+standards update-check
 ```
 
 `init` 会复制规范文档、AI 强制执行入口、状态看板、工作流模板和上游配置，安装 Codex skill，并尝试初始化 RTK。默认不会覆盖已存在文件，除非传入 `--force`。
@@ -97,11 +98,18 @@ PROJECT_PROGRESS.md
 standards guard
 ```
 
+检查规范包是否有新版本：
+
+```bash
+standards update-check
+```
+
 也可以不安装，直接使用 npx：
 
 ```bash
 npx ai-development-standards-kit init
 npx ai-development-standards-kit guard
+npx ai-development-standards-kit update-check
 ```
 
 ### 3. 作为新项目规范模板

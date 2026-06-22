@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.18.0
+
+- 新增 `standards update-check` / `standards upgrade-check`，用于检测当前安装版本是否落后于 npm latest。
+- 版本检查命令会输出当前版本、最新版本和升级命令。
+
 ## 0.17.0
 
 - 新增主会话持续调度循环：后台子任务完成后必须验收、更新状态看板、生成下一批任务并继续派发。

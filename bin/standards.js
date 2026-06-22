@@ -85,6 +85,67 @@ function commandExists(command) {
   return result.status === 0;
 }
 
+function readPackage() {
+  return JSON.parse(fs.readFileSync(path.join(packageRoot, "package.json"), "utf8"));
+}
+
+function compareVersions(left, right) {
+  const normalize = (value) => String(value).replace(/^[^\d]*/, "").split(/[.-]/).map((part) => {
+    const parsed = Number.parseInt(part, 10);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  });
+  const a = normalize(left);
+  const b = normalize(right);
+  const length = Math.max(a.length, b.length);
+
+  for (let index = 0; index < length; index += 1) {
+    const current = a[index] || 0;
+    const next = b[index] || 0;
+    if (current > next) return 1;
+    if (current < next) return -1;
+  }
+
+  return 0;
+}
+
+function checkForUpdate() {
+  const pkg = readPackage();
+  const result = spawnSync("npm", ["view", pkg.name, "version", "--json"], {
+    cwd,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+    shell: false
+  });
+
+  if (result.status !== 0) {
+    console.error("无法查询 npm 最新版本。请检查网络、npm registry 或登录状态。");
+    if (result.stderr) console.error(result.stderr.trim());
+    process.exit(1);
+  }
+
+  const latest = result.stdout.trim().replace(/^"|"$/g, "");
+  const comparison = compareVersions(pkg.version, latest);
+
+  log(`当前版本：${pkg.version}`);
+  log(`最新版本：${latest}`);
+
+  if (comparison < 0) {
+    log("");
+    log("发现新版本。建议升级：");
+    log(`npm install -g ${pkg.name}@latest`);
+    return;
+  }
+
+  if (comparison > 0) {
+    log("");
+    log("当前本地版本高于 npm latest，可能是本地开发版或预发布版本。");
+    return;
+  }
+
+  log("");
+  log("当前已经是最新版本。");
+}
+
 function installSkill() {
   const sourceDir = path.join(packageRoot, "skills", "ai-development-standards");
   const targetDir = path.join(process.env.CODEX_HOME || path.join(os.homedir(), ".codex"), "skills", "ai-development-standards");
@@ -261,6 +322,7 @@ function usage() {
   npx ai-development-standards-kit setup-rtk
   npx ai-development-standards-kit check
   npx ai-development-standards-kit guard
+  npx ai-development-standards-kit update-check
   npx ai-development-standards-kit version
 
 说明：
@@ -269,6 +331,7 @@ function usage() {
   setup-rtk     初始化 RTK 上下文压缩工具
   check         检查 npm 包内规范文件是否完整
   guard         检查当前项目是否具备 AI 强制执行规范入口
+  update-check  检查 npm 是否有新版本可升级
   --force       覆盖已存在的规范文件
   --skip-rtk    初始化时跳过 RTK
 `);
@@ -297,8 +360,12 @@ switch (command) {
   case "guard":
     guardProject();
     break;
+  case "update-check":
+  case "upgrade-check":
+    checkForUpdate();
+    break;
   case "version": {
-    const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, "package.json"), "utf8"));
+    const pkg = readPackage();
     log(pkg.version);
     break;
   }
