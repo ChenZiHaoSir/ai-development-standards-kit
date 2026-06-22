@@ -4,7 +4,7 @@
   "mirrors": [
     {
       "name": "github",
-      "url": ""
+      "url": "https://github.com/ChenZiHaoSir/ai-development-standards-kit.git"
     }
   ],
   "defaultBranch": "main",
@@ -13,4 +13,3 @@
   "maintainerReviewRequired": true,
   "allowAutoMerge": false
 }
-
