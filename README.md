@@ -69,13 +69,15 @@ standards init
 
 ```bash
 standards init --skip-rtk
+standards init --skip-agency-agents
 standards init --force
 standards check
 standards guard
 standards update-check
+standards setup-agency-agents
 ```
 
-`init` 会复制规范文档、AI 强制执行入口、状态看板、工作流模板和上游配置，安装 Codex skill，并尝试初始化 RTK。默认不会覆盖已存在文件，除非传入 `--force`。
+`init` 会复制规范文档、AI 强制执行入口、状态看板、工作流模板和上游配置，安装 Codex skill，尝试安装 Codex 版 `agency-agents`，并尝试初始化 RTK。默认不会覆盖已存在文件，除非传入 `--force`。
 
 初始化后会生成：
 
@@ -166,7 +168,30 @@ RTK 是推荐的可选增强工具，用于压缩命令输出、减少 token 噪
 
 后续用户把本规范喂给 AI 后，AI 应先检测 `rtk` 是否存在；缺失时可以按本脚本自动安装，安装失败则降级使用普通命令并控制输出长度。
 
-### 6. 作为 Agent 编排手册
+### 6. 安装 agency-agents 专业智能体
+
+`agency-agents` 是可选但推荐的专业智能体库。`standards init` 默认会尝试自动安装 Codex 版 `agency-agents`；也可以单独执行：
+
+```bash
+standards setup-agency-agents
+```
+
+该命令会：
+
+- clone 官方仓库 `https://github.com/msitarzewski/agency-agents.git` 到 `~/.cache/ai-development-standards-kit/agency-agents`。
+- 运行官方转换脚本：`./scripts/convert.sh --tool codex`。
+- 运行官方安装脚本：`./scripts/install.sh --tool codex --no-interactive`。
+- 将生成的 Codex custom agents 安装到 `~/.codex/agents/`，或 `CODEX_AGENTS_DIR` 指定的目录。
+
+如果安装失败，不阻塞项目初始化。AI 必须降级使用本项目内置的 `docs/agents/` 编排规则和 `/goal` 模板。
+
+如果用户不希望自动安装第三方 agent 库：
+
+```bash
+standards init --skip-agency-agents
+```
+
+### 7. 作为 Agent 编排手册
 
 详见：
 

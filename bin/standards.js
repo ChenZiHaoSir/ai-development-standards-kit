@@ -71,6 +71,7 @@ function readTemplate(relativePath) {
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
     cwd: options.cwd || cwd,
+    env: options.env || process.env,
     stdio: options.stdio || "inherit",
     shell: false
   });
@@ -185,6 +186,80 @@ function setupRtk() {
   }
 }
 
+function agencyAgentsCacheDir() {
+  return path.join(os.homedir(), ".cache", "ai-development-standards-kit", "agency-agents");
+}
+
+function agencyAgentsInstallDir() {
+  return process.env.CODEX_AGENTS_DIR || path.join(process.env.CODEX_HOME || path.join(os.homedir(), ".codex"), "agents");
+}
+
+function setupAgencyAgents(options = {}) {
+  const repoUrl = "https://github.com/msitarzewski/agency-agents.git";
+  const cacheDir = agencyAgentsCacheDir();
+  const codexAgentsDir = agencyAgentsInstallDir();
+
+  if (!commandExists("git")) {
+    log("未检测到 git，无法自动安装 agency-agents。后续将仅使用本项目内置角色编排规范。");
+    return false;
+  }
+
+  ensureDir(path.dirname(cacheDir));
+
+  if (exists(path.join(cacheDir, ".git"))) {
+    log(`更新 agency-agents 缓存：${cacheDir}`);
+    if (!run("git", ["pull", "--ff-only"], { cwd: cacheDir })) {
+      log("agency-agents 更新失败。将尝试使用现有缓存继续安装。");
+    }
+  } else {
+    if (exists(cacheDir)) {
+      fs.rmSync(cacheDir, { recursive: true, force: true });
+    }
+    log(`下载 agency-agents：${repoUrl}`);
+    if (!run("git", ["clone", "--depth", "1", repoUrl, cacheDir])) {
+      log("agency-agents 下载失败。后续将仅使用本项目内置角色编排规范。");
+      return false;
+    }
+  }
+
+  const convertScript = path.join(cacheDir, "scripts", "convert.sh");
+  const installScript = path.join(cacheDir, "scripts", "install.sh");
+
+  if (!exists(convertScript) || !exists(installScript)) {
+    log("agency-agents 缓存缺少官方安装脚本。后续将仅使用本项目内置角色编排规范。");
+    return false;
+  }
+
+  log("转换 agency-agents 为 Codex custom agent 格式。");
+  if (!run("bash", [convertScript, "--tool", "codex"], { cwd: cacheDir })) {
+    log("agency-agents 转换失败。后续将仅使用本项目内置角色编排规范。");
+    return false;
+  }
+
+  ensureDir(codexAgentsDir);
+  log(`安装 agency-agents 到 Codex agents 目录：${codexAgentsDir}`);
+  const installArgs = [installScript, "--tool", "codex", "--no-interactive"];
+  if (options.dryRun) installArgs.push("--dry-run");
+
+  if (!run("bash", installArgs, {
+    cwd: cacheDir,
+    env: {
+      ...process.env,
+      CODEX_AGENTS_DIR: codexAgentsDir
+    }
+  })) {
+    log("agency-agents 安装失败。后续将仅使用本项目内置角色编排规范。");
+    return false;
+  }
+
+  const count = exists(codexAgentsDir)
+    ? fs.readdirSync(codexAgentsDir).filter((file) => file.endsWith(".toml")).length
+    : 0;
+
+  log(`agency-agents 安装完成。Codex agents 目录当前包含 ${count} 个 .toml agent 文件。`);
+  return true;
+}
+
 function initProject(options = {}) {
   log("== AI 开发规范初始化 ==");
   log(`目标目录：${cwd}`);
@@ -213,6 +288,12 @@ function initProject(options = {}) {
 
   installSkill();
 
+  if (options.skipAgencyAgents) {
+    log("已跳过 agency-agents 安装。");
+  } else {
+    setupAgencyAgents();
+  }
+
   if (options.skipRtk) {
     log("已跳过 RTK 初始化。");
   } else {
@@ -237,6 +318,7 @@ function checkKit() {
     "docs/process/AI_WORKFLOW_FACTORY.md",
     "docs/process/ENGINEERING_WORKFLOW.md",
     "docs/process/TECH_DECISION.md",
+    "docs/agents/AGENT_ORCHESTRATION.md",
     "docs/workflows/WORKFLOW_TEMPLATE.md",
     "skills/ai-development-standards/SKILL.md",
     "templates/AI_AGENT_RULES.md",
@@ -279,6 +361,7 @@ function guardProject() {
     "docs/security/SECURITY_BASELINE.md",
     "docs/release/RELEASE_CHECKLIST.md",
     "docs/agents/MAIN_SESSION_CONTROL.md",
+    "docs/agents/AGENT_ORCHESTRATION.md",
     "docs/agents/SPECIALIST_DELIVERABLES.md",
     "docs/workflows/WORKFLOW_TEMPLATE.md",
     "docs/process/STANDARDS_UPSTREAM_CONFIG.json"
@@ -317,8 +400,9 @@ function guardProject() {
 
 function usage() {
   log(`用法：
-  npx ai-development-standards-kit init [--force] [--skip-rtk]
+  npx ai-development-standards-kit init [--force] [--skip-rtk] [--skip-agency-agents]
   npx ai-development-standards-kit install-skill
+  npx ai-development-standards-kit setup-agency-agents
   npx ai-development-standards-kit setup-rtk
   npx ai-development-standards-kit check
   npx ai-development-standards-kit guard
@@ -328,12 +412,14 @@ function usage() {
 说明：
   init          在当前项目目录生成中文 AI 开发规范、状态看板和工作流模板
   install-skill 安装 Codex skill 到 ~/.codex/skills
+  setup-agency-agents 安装 agency-agents 到 ~/.codex/agents
   setup-rtk     初始化 RTK 上下文压缩工具
   check         检查 npm 包内规范文件是否完整
   guard         检查当前项目是否具备 AI 强制执行规范入口
   update-check  检查 npm 是否有新版本可升级
   --force       覆盖已存在的规范文件
   --skip-rtk    初始化时跳过 RTK
+  --skip-agency-agents 初始化时跳过 agency-agents
 `);
 }
 
@@ -341,7 +427,8 @@ const args = process.argv.slice(2);
 const command = args[0] || "help";
 const options = {
   force: args.includes("--force"),
-  skipRtk: args.includes("--skip-rtk")
+  skipRtk: args.includes("--skip-rtk"),
+  skipAgencyAgents: args.includes("--skip-agency-agents")
 };
 
 switch (command) {
@@ -350,6 +437,9 @@ switch (command) {
     break;
   case "install-skill":
     installSkill();
+    break;
+  case "setup-agency-agents":
+    setupAgencyAgents();
     break;
   case "setup-rtk":
     setupRtk();

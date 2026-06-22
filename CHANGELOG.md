@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.21.0
+
+- 新增 `standards setup-agency-agents`，自动下载、转换并安装 Codex 版 `agency-agents` 到 `~/.codex/agents/`。
+- `standards init` 默认尝试安装 `agency-agents`，可用 `--skip-agency-agents` 跳过；安装失败时降级为内置角色编排规范，不阻塞项目初始化。
+
 ## 0.20.0
 
 - 强化主会话持续派发硬约束：每个子智能体返回后必须验收、更新看板、生成下一批 `/goal` 并继续派发。

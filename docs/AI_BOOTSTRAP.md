@@ -43,12 +43,14 @@ chmod +x ./scripts/bootstrap-ai-standards.sh
 
 ```bash
 ./scripts/install-skill.sh
+node bin/standards.js setup-agency-agents
 ./scripts/setup-rtk.sh
 ```
 
-8. 如果 RTK 安装失败，不阻塞后续流程，改用普通命令并遵守 `docs/process/CONTEXT_BUDGET.md`。
-9. 读取 `docs/process/LANGUAGE_POLICY.md`，并确认后续默认使用简体中文。
-10. 安装完成后，AI 不应立刻创建业务项目，必须先请用户描述项目需求。
+8. 如果 agency-agents 安装失败，不阻塞后续流程，改用本项目内置角色编排规范和 `/goal` 模板。
+9. 如果 RTK 安装失败，不阻塞后续流程，改用普通命令并遵守 `docs/process/CONTEXT_BUDGET.md`。
+10. 读取 `docs/process/LANGUAGE_POLICY.md`，并确认后续默认使用简体中文。
+11. 安装完成后，AI 不应立刻创建业务项目，必须先请用户描述项目需求。
 
 ## 仓库地址处理示例
 
@@ -86,6 +88,7 @@ Use $ai-development-standards to initialize development standards and agent work
 ## 自动初始化边界
 
 - 可以自动安装本地 skill。
+- 可以自动下载并安装 `agency-agents` 到 Codex agents 目录；安装失败不得阻塞，必须降级为内置角色编排规范。
 - 可以自动安装或初始化 RTK，但安装失败不得阻塞。
 - 不得自动合并上游规范提案。
 - 不得跳过用户需求澄清。

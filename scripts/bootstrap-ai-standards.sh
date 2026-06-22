@@ -20,6 +20,14 @@ else
   exit 1
 fi
 
+if [[ "${SKIP_AGENCY_AGENTS:-0}" == "1" ]]; then
+  echo "检测到 SKIP_AGENCY_AGENTS=1，跳过 agency-agents 安装。"
+elif command -v node >/dev/null 2>&1 && [[ -f bin/standards.js ]]; then
+  node bin/standards.js setup-agency-agents || echo "agency-agents 安装失败。后续使用本项目内置角色编排规范。"
+else
+  echo "未检测到 node 或 bin/standards.js，跳过 agency-agents 自动安装。后续使用本项目内置角色编排规范。"
+fi
+
 if [[ "${SKIP_RTK:-0}" == "1" ]]; then
   echo "检测到 SKIP_RTK=1，跳过 RTK 初始化。"
 elif [[ -x scripts/setup-rtk.sh ]]; then
