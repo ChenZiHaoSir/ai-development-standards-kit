@@ -7,6 +7,7 @@
 - `ai-development-guidelines` 的通用研发规范：作为质量、安全、测试、发布和协作底线。
 - `agency-agents` 的 232 个专业 Agent：作为按阶段调用的专家角色库。
 - `ponytail` 的最小必要实现思想：作为反过度工程、少依赖、少抽象、优先平台能力的实现约束。
+- AI Workflow Factory 的工作流沉淀思想：作为上下文采集、项目手册、二次自审和重复任务自动化的流程约束。
 
 ## 如何使用
 
@@ -60,10 +61,12 @@ AGENTS.md
 docs/process/DEVELOPMENT_STANDARDS.md
 docs/process/ENGINEERING_WORKFLOW.md
 docs/process/LANGUAGE_POLICY.md
+docs/process/AI_WORKFLOW_FACTORY.md
 docs/process/CONTEXT_BUDGET.md
 docs/process/MINIMAL_IMPLEMENTATION.md
 docs/process/QA_STRATEGY.md
 docs/process/STANDARDS_EVOLUTION.md
+docs/workflows/WORKFLOW_TEMPLATE.md
 standards-upstream.example.json
 docs/security/SECURITY_BASELINE.md
 docs/release/RELEASE_CHECKLIST.md
@@ -123,7 +126,7 @@ docs/diagrams/project-workflow.drawio
 默认工作流：
 
 ```text
-需求澄清 -> 架构设计 -> 实现 -> 测试验证 -> 安全审查 -> 发布交付 -> 运营复盘
+上下文采集 -> 需求澄清 -> 架构设计 -> 实现 -> 二次自审 -> 测试验证 -> 安全审查 -> 发布交付 -> 工作流沉淀
 ```
 
 每个阶段按需调用已安装的 Codex Agent，例如：
@@ -145,11 +148,14 @@ docs/diagrams/project-workflow.drawio
 - 子智能体只负责单一专业任务，例如 UI、前端、后端、测试、安全、DevOps、文档。
 - 开发前每个活跃专业智能体必须产出本角色文档，例如 UI 文档、前端集成文档、后端 API 文档、测试计划和安全文档。
 - 并行开发必须先明确接口契约、文件边界、输入输出和验收标准。
+- 模糊任务必须先补齐关键上下文；同类任务重复 3 次以上时，应沉淀为 `docs/workflows/` 下的可复用流程。
 
 ## 项目底线
 
 - 不以“能跑”为完成标准，以“用户能稳定完成目标”为完成标准。
 - 不默认生成英文项目文档；中文用户场景下，规范、进度、计划、评审和交付物正文必须默认简体中文。
+- 不在关键上下文缺失时直接执行；先确认目标、受众、范围、输入、约束、输出格式和验收标准。
+- 不让重复任务停留在口头经验；出现 3 次以上必须沉淀为模板、脚本或工作流。
 - 不把无关文件、完整日志和大型命令输出塞进 AI 上下文；先摘要、定位、分段读取，必要时使用 `rtk` 等压缩输出工具。
 - 不默认写复杂实现；先判断是否需要做，再优先使用标准库、平台原生能力和已有依赖。
 - 不跳过需求、架构、测试、安全和发布门禁。

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.0
+
+- 融合 AI Workflow Factory 思想，新增 `docs/process/AI_WORKFLOW_FACTORY.md`。
+- 增加上下文采集、项目操作手册、二次自审和重复任务工作流沉淀规则。
+- 更新主会话控制、工程流程、状态看板和 skill 入口，要求模糊任务先澄清、重复任务沉淀到 `docs/workflows/`。
+- 新增 `docs/workflows/WORKFLOW_TEMPLATE.md`，提供可复制的中文工作流模板。
+
 ## 0.11.0
 
 - 新增 `docs/process/LANGUAGE_POLICY.md`，明确默认使用简体中文生成文档和汇报进度。

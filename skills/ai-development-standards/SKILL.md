@@ -16,6 +16,7 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - Always read `references/core-standards.md`.
    - For repo exploration, command output, logs, or worker-agent handoffs, read `references/context-budget.md`.
    - For language requirements, read the repository `docs/process/LANGUAGE_POLICY.md` when available.
+   - For ambiguous tasks, repeated tasks, self-review, project manuals, or reusable workflows, read `docs/process/AI_WORKFLOW_FACTORY.md` when available.
    - For implementation planning or code review, read `references/minimal-implementation.md`.
    - For new project setup, read `references/project-scaffold.md`.
    - For Agent orchestration, read `references/agent-playbook.md`.
@@ -28,6 +29,7 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - `docs/process/DEVELOPMENT_STANDARDS.md`
    - `docs/process/ENGINEERING_WORKFLOW.md`
    - `docs/process/LANGUAGE_POLICY.md`
+   - `docs/process/AI_WORKFLOW_FACTORY.md`
    - `docs/process/CONTEXT_BUDGET.md`
    - `docs/process/MINIMAL_IMPLEMENTATION.md`
    - `docs/process/QA_STRATEGY.md`
@@ -42,6 +44,7 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - `docs/agents/SPECIALIST_WORKERS.md`
    - `docs/agents/PARALLEL_DEVELOPMENT.md`
    - `docs/agents/SPECIALIST_DELIVERABLES.md`
+   - `docs/workflows/WORKFLOW_TEMPLATE.md`
    - `PROJECT_PROGRESS.md` or equivalent status board
    - `.github` or platform-equivalent issue/PR templates when applicable
 4. Convert rules into enforceable checks whenever the project provides the tooling: lint, typecheck, tests, build, lockfile validation, dependency scan, secret scan, smoke/E2E, and release checklist.
@@ -51,6 +54,9 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
 
 - Do not weaken the security, testing, release, or architecture baseline without an explicit user decision.
 - Default to Simplified Chinese for user-facing communication and generated project documents. Translate third-party English template text before final delivery.
+- Ask only materially useful clarification questions before executing ambiguous tasks; do not pretend missing context is known.
+- After producing plans, architecture, important docs, important code, or release steps, run a self-review pass and revise.
+- When a task repeats three or more times, propose a reusable workflow under `docs/workflows/`.
 - Prefer the project's existing framework conventions over inventing a new structure.
 - Keep generated standards concise enough to be read, but concrete enough to enforce.
 - Apply context-budget discipline: summarize before expanding, prefer failure output over success noise, send worker agents only the context they need, and preserve raw-output paths for long logs. If `rtk` is missing and tool bootstrap is allowed, run `./scripts/setup-rtk.sh`; if installation fails, continue with bounded normal commands.

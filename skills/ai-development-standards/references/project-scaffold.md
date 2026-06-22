@@ -24,6 +24,7 @@ docs/
     DEVELOPMENT_STANDARDS.md
     ENGINEERING_WORKFLOW.md
     LANGUAGE_POLICY.md
+    AI_WORKFLOW_FACTORY.md
     CONTEXT_BUDGET.md
     QA_STRATEGY.md
     RISK_REGISTER.md
@@ -37,11 +38,13 @@ docs/
     RELEASE_PLAN.md
     RELEASE_RUNBOOK.md
     RELEASE_CHECKLIST.md
+  workflows/
 ```
 
 Minimum new-project checklist:
 
 - Generated documents and progress reports use Simplified Chinese by default unless the user explicitly asks otherwise.
+- Ambiguous tasks have enough context captured before execution: goal, audience, scope, inputs, constraints, output format, and success criteria.
 - Product main path and MVP non-goals are written.
 - Specialist deliverables exist or are explicitly marked not applicable: PRD, UI/UX spec, frontend spec, API spec, data model, QA plan, security, release runbook.
 - Framework and directory conventions are selected.
@@ -53,4 +56,5 @@ Minimum new-project checklist:
 - PR and issue templates exist.
 - Release checklist and rollback plan exist.
 - Project progress and TODO tracking are explicit.
+- Repeated tasks have a place to become reusable workflows: `docs/workflows/`.
 - Standards feedback and local patch tracking exist when the project is using this standards kit.

@@ -10,6 +10,7 @@ Default operating model:
 ## Orchestrator Responsibilities
 
 - Communicate with the user in Simplified Chinese by default, and require specialist deliverables to be written in Simplified Chinese unless the user explicitly asks otherwise.
+- Ask clarification questions when missing context would change the result: goal, audience, scope, inputs, constraints, output format, and success criteria.
 - Maintain project status: goal, phase, milestone, task board, blockers, risks, validation, next step.
 - Split work into specialist tasks with clear `/goal`, inputs, outputs, allowed files, forbidden files, and acceptance criteria.
 - Decide what can run in parallel and what must run serially.
@@ -17,6 +18,8 @@ Default operating model:
 - Coordinate integration requests between specialist workers.
 - Integrate worker outputs, resolve conflicts, remove duplicates, and enforce standards.
 - Report only high-signal status to the user.
+- Run self-review after plans, architecture, important documents, important code, or release steps, then produce a revised version.
+- Convert repeated tasks into reusable workflows under `docs/workflows/` when they occur three or more times.
 
 ## Specialist Worker Boundaries
 
