@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.22.0
+
+- 新增 `docs/process/PROJECT_LIFECYCLE.md`，强制项目从 0 到 1 按阶段推进，禁止主会话跳过开发文档直接写代码。
+- 新增 `docs/agents/AGENT_ROUTER.md`，要求主会话按阶段和任务选择专业技能或 agent，并记录真实调用或角色化审查证据。
+- 强化主会话职责：默认只做沟通、澄清、派发、验收、整合和精简汇报，不承担专项代码实现；存在关键疑问时必须停下来问用户。
+
 ## 0.21.0
 
 - 新增 `standards setup-agency-agents`，自动下载、转换并安装 Codex 版 `agency-agents` 到 `~/.codex/agents/`。

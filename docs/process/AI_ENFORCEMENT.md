@@ -9,11 +9,14 @@ AI 必须在开始任务前读取并遵守以下文件：
 1. `AGENTS.md`
 2. `docs/process/DEVELOPMENT_STANDARDS.md`
 3. `docs/process/ENGINEERING_WORKFLOW.md`
-4. `docs/process/MINIMAL_IMPLEMENTATION.md`
-5. `docs/process/TECH_DECISION.md`
-6. `docs/process/QA_STRATEGY.md`
-7. `docs/process/LANGUAGE_POLICY.md`
-8. 当前任务相关的专业文档，例如 `docs/agents/`、`docs/security/`、`docs/release/`
+4. `docs/process/PROJECT_LIFECYCLE.md`
+5. `docs/process/MINIMAL_IMPLEMENTATION.md`
+6. `docs/process/TECH_DECISION.md`
+7. `docs/process/QA_STRATEGY.md`
+8. `docs/process/LANGUAGE_POLICY.md`
+9. `docs/agents/MAIN_SESSION_CONTROL.md`
+10. `docs/agents/AGENT_ROUTER.md`
+11. 当前任务相关的专业文档，例如 `docs/agents/`、`docs/security/`、`docs/release/`
 
 未读取这些文件时，不得直接开始写代码。
 
@@ -33,8 +36,14 @@ AI 开始执行前必须先给出简短执行声明：
 
 如果目标、范围、接口、字段、验收标准、权限、安全边界不清楚，AI 必须先提问或补齐假设，不得直接实现。
 
+项目型任务中，主会话不得直接实现代码。主会话必须先识别生命周期阶段，按 `docs/agents/AGENT_ROUTER.md` 选择专业技能或 agent，向子智能体派发任务，并维护 `PROJECT_PROGRESS.md`。
+
+只要存在任何会影响目标、范围、技术栈、接口契约、权限、安全、成本、发布或验收的疑问，主会话必须暂停并向用户提问，不能自己脑补。
+
 ## 实现时强制要求
 
+- 专项实现必须由对应专业子智能体完成，主会话只做派发、验收和整合。
+- 所有实现必须基于用户确认后的 PRD、UI/UX Spec、API Spec、架构文档、任务看板和验收标准。
 - 优先复用项目已有函数、组件、类型、服务和工具。
 - 相同或相似逻辑出现第二次时，必须评估是否提取为通用函数、组件、hook、服务或模块。
 - 不得手搓已有成熟依赖能稳定解决的问题；新增依赖前必须说明原因，并优先使用项目已安装依赖、标准库和框架能力。
@@ -66,13 +75,14 @@ pnpm build
 AI 最终回复必须包含：
 
 ```text
-规范执行情况：
-已修改文件：
-技术选型决策：
-复用/抽象处理：
-验证命令及结果：
-未执行项及原因：
-风险与后续建议：
+当前阶段：
+进度：
+已完成：
+正在做：
+验证结果：
+风险/阻塞：
+需要用户确认：
+下一步：
 ```
 
 如果没有完成质量门禁，不得声称任务已完全完成。

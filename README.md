@@ -84,7 +84,9 @@ standards setup-agency-agents
 ```text
 AGENTS.md
 docs/process/AI_ENFORCEMENT.md
+docs/process/PROJECT_LIFECYCLE.md
 docs/process/TECH_DECISION.md
+docs/agents/AGENT_ROUTER.md
 CLAUDE.md
 GEMINI.md
 .cursor/rules/ai-development-standards.mdc
@@ -92,7 +94,7 @@ GEMINI.md
 PROJECT_PROGRESS.md
 ```
 
-这些文件用于约束不同 AI 工具：开工前必须读规范，技术选型必须考虑安全、性能、维护性、稳定性和可替换性，交付前必须输出质量门禁结果。
+这些文件用于约束不同 AI 工具：开工前必须读规范，项目型任务必须按生命周期阶段推进，主会话只做沟通、派发、验收和整合，专项实现必须交给专业子智能体，技术选型必须考虑安全、性能、维护性、稳定性和可替换性，交付前必须输出质量门禁结果。
 
 检查当前项目是否具备强制约束入口：
 
@@ -123,6 +125,7 @@ README.md
 AGENTS.md
 docs/process/DEVELOPMENT_STANDARDS.md
 docs/process/ENGINEERING_WORKFLOW.md
+docs/process/PROJECT_LIFECYCLE.md
 docs/process/LANGUAGE_POLICY.md
 docs/process/AI_WORKFLOW_FACTORY.md
 docs/process/CONTEXT_BUDGET.md
@@ -135,6 +138,7 @@ docs/workflows/WORKFLOW_TEMPLATE.md
 standards-upstream.example.json
 docs/security/SECURITY_BASELINE.md
 docs/release/RELEASE_CHECKLIST.md
+docs/agents/AGENT_ROUTER.md
 templates/
 ```
 
@@ -197,6 +201,7 @@ standards init --skip-agency-agents
 
 ```text
 docs/agents/AGENT_ORCHESTRATION.md
+docs/agents/AGENT_ROUTER.md
 docs/agents/MAIN_SESSION_CONTROL.md
 docs/agents/SPECIALIST_WORKERS.md
 docs/agents/PARALLEL_DEVELOPMENT.md
@@ -232,7 +237,10 @@ docs/diagrams/project-workflow.drawio
 默认协作模式是“主会话控制台 + 专业子智能体”：
 
 - 用户只和主会话交流。
-- 主会话负责项目状态、任务拆分、调度、整合和质量门禁。
+- 主会话是项目大脑，负责用户沟通、需求澄清、开发文档确认、任务拆分、技能路由、调度、整合、质量门禁和风险决策。
+- 项目型任务中，主会话默认不负责代码实现；UI、前端、后端、测试、安全、DevOps、文档等专项工作必须派发给对应专业子智能体。
+- 主会话必须按 `docs/process/PROJECT_LIFECYCLE.md` 推进阶段，按 `docs/agents/AGENT_ROUTER.md` 选择技能或 agent。
+- 有任何影响目标、范围、技术栈、接口、权限、安全、交付或验收的问题，主会话必须停下来问用户，不能自己脑补。
 - 在 Codex 中，子智能体默认作为后台子任务或后台 agent 执行，不默认创建用户可见的新窗口。
 - 如果用户明确要求可见子智能体窗口，主会话必须切换为纯编排模式，只能派发、验收和整合，不能直接承担专项实现。
 - 主会话必须持续维护任务队列，后台任务完成后立即验收结果、更新看板、生成下一批 `/goal`，并继续派发给对应专业智能体。
@@ -259,3 +267,4 @@ docs/diagrams/project-workflow.drawio
 - 本项目当前同时维护 Gitee 和 GitHub，上游变更提交后应同时推送到两个远端。
 - Codex 使用本模板时，专业智能体应后台执行并回传结果给主会话，不能要求用户手动管理多个子窗口。
 - 主会话不能只分配一轮任务后停止；必须按状态看板持续派发、验收、整合、再派发。没有继续派发时，必须记录项目完成、用户暂停、用户决策阻塞或环境阻塞之一。
+- 主会话对用户汇报必须精简直白，固定说明阶段、进度、已完成、正在做、风险/阻塞、需要用户确认、下一步。
