@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.14.0
+
+- 发布短包名 `czhstd`，支持通过 `npx czhstd init` 初始化项目。
+- 新增 `czhstd` 和 `aistd` CLI bin 别名，保留 `ai-development-standards-kit` 和 `standards` 兼容入口。
+
 ## 0.13.0
 
 - 新增 npm CLI 包配置，支持发布后通过 `npx ai-development-standards-kit init` 初始化项目。

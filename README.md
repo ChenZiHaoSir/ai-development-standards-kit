@@ -56,18 +56,24 @@ docs/AI_BOOTSTRAP.md
 发布到 npm 后，用户可以在自己的项目根目录执行：
 
 ```bash
-npx ai-development-standards-kit init
+npx czhstd init
 ```
 
 常用选项：
 
 ```bash
-npx ai-development-standards-kit init --skip-rtk
-npx ai-development-standards-kit init --force
-npx ai-development-standards-kit check
+npx czhstd init --skip-rtk
+npx czhstd init --force
+npx czhstd check
 ```
 
 `init` 会复制规范文档、状态看板、工作流模板和上游配置，安装 Codex skill，并尝试初始化 RTK。默认不会覆盖已存在文件，除非传入 `--force`。
+
+兼容旧包名：
+
+```bash
+npx ai-development-standards-kit init
+```
 
 ### 3. 作为新项目规范模板
 
