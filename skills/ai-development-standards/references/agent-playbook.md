@@ -4,6 +4,8 @@ Use installed `agency-agents` roles as specialist reviewers or builders.
 
 Default model: one main orchestrator session coordinates specialist workers. The user talks to the main session; worker sessions execute assigned single-skill tasks and hand results back.
 
+Specialist workers may request integration help from each other, but the request must be routed through the orchestrator and recorded in the status board.
+
 ## Default Phase Map
 
 | Phase | Recommended agents |
@@ -36,6 +38,15 @@ Each handoff should include:
 3. If failed, return to implementation with exact evidence.
 4. Retry at most three times before escalating.
 5. Advance only when the current task passes.
+
+## Integration Loop
+
+1. Worker raises an integration request to the orchestrator.
+2. Orchestrator records requester, target specialist, affected contract/files, blocking level, and expected output.
+3. Orchestrator assigns the target specialist a focused `/goal`.
+4. Target specialist returns conclusion, changes, validation, and contract impact.
+5. Orchestrator decides the final path and syncs related workers.
+6. QA validates the integration issue is closed.
 
 ## Parallel Agent Prompt
 

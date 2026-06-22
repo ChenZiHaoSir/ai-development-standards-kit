@@ -12,6 +12,7 @@ Default operating model:
 - Maintain project status: goal, phase, milestone, task board, blockers, risks, validation, next step.
 - Split work into specialist tasks with clear `/goal`, inputs, outputs, allowed files, forbidden files, and acceptance criteria.
 - Decide what can run in parallel and what must run serially.
+- Coordinate integration requests between specialist workers.
 - Integrate worker outputs, resolve conflicts, remove duplicates, and enforce standards.
 - Report only high-signal status to the user.
 
@@ -27,6 +28,32 @@ Default operating model:
 - Docs worker: README, changelog, usage docs, release notes.
 
 No worker should implement across roles unless the orchestrator explicitly reassigns the task.
+
+## Cross-Worker Integration Requests
+
+Workers may raise integration requests to other roles, but all cross-worker communication must go through the orchestrator.
+
+Flow:
+
+```text
+Worker A -> Orchestrator: integration request
+Orchestrator -> Status board: record blocker/request
+Orchestrator -> Worker B: assigned /goal
+Worker B -> Orchestrator: conclusion, changes, validation
+Orchestrator -> Worker A + QA: decision and verification task
+```
+
+Request fields:
+
+- Requester.
+- Target specialist.
+- Problem.
+- Affected contract, file, API, data model, or workflow.
+- Blocking level.
+- Expected output.
+- Suggested validation.
+
+Workers must not privately change contracts, schemas, architecture boundaries, or task scope without orchestrator registration and decision.
 
 ## Worker Task Packet
 
@@ -71,6 +98,11 @@ Do not parallelize when workers would edit the same files, guess the same contra
 
 | ID | Task | Specialist | Status | Deliverable | Risk |
 | --- | --- | --- | --- | --- | --- |
+
+## Integration Requests
+
+| ID | From | To | Problem | Status |
+| --- | --- | --- | --- | --- |
 
 ## Blockers
 
