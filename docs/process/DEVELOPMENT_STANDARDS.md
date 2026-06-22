@@ -13,6 +13,8 @@
 
 ## 2. 技术选型
 
+- 技术选型必须优先考虑安全性、可维护性、稳定性、性能、生态兼容、交付效率和可替换性，不能只按“最快实现”决定。
+- 涉及框架、数据库、组件库、状态管理、ORM、鉴权、部署、测试工具、AI SDK 等关键选型时，必须按 `docs/process/TECH_DECISION.md` 输出评分和 ADR。
 - 前端：React + TypeScript + Next.js/Vite，或项目明确认可的主流框架。
 - 管理后台：React + TypeScript + Ant Design/Arco/MUI，统一表格、表单、权限和路由。
 - Node.js：NestJS/Fastify/Express，统一 DTO、校验、异常、日志和配置。
@@ -21,7 +23,7 @@
 - 桌面端：Tauri/Electron，系统能力封装在桌面层。
 - AI 服务：Python + FastAPI/Ray/Celery/LangGraph 等成熟组件，模型调用集中封装。
 
-非主流技术必须在架构文档中说明选择理由、替代方案、风险和退出策略。
+非主流技术必须在架构文档中说明选择理由、替代方案、风险、补偿措施和退出策略。
 
 ## 3. 最小必要实现
 

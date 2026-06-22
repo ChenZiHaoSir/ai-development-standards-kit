@@ -52,6 +52,22 @@ function copyDirIfMissing(sourceDir, targetDir, options = {}) {
   }
 }
 
+function writeFileIfMissing(target, content, options = {}) {
+  if (exists(target) && !options.force) {
+    log(`跳过已存在文件：${path.relative(cwd, target)}`);
+    return false;
+  }
+
+  ensureDir(path.dirname(target));
+  fs.writeFileSync(target, content);
+  log(`${exists(target) && options.force ? "覆盖" : "创建"}：${path.relative(cwd, target)}`);
+  return true;
+}
+
+function readTemplate(relativePath) {
+  return fs.readFileSync(path.join(packageRoot, relativePath), "utf8");
+}
+
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
     cwd: options.cwd || cwd,
@@ -122,6 +138,12 @@ function initProject(options = {}) {
   copyDirIfMissing(path.join(packageRoot, "docs", "workflows"), path.join(cwd, "docs", "workflows"), options);
   copyDirIfMissing(path.join(packageRoot, "templates"), path.join(cwd, "templates"), options);
 
+  const aiRules = readTemplate("templates/AI_AGENT_RULES.md");
+  writeFileIfMissing(path.join(cwd, "CLAUDE.md"), aiRules, options);
+  writeFileIfMissing(path.join(cwd, "GEMINI.md"), aiRules, options);
+  writeFileIfMissing(path.join(cwd, ".cursor", "rules", "ai-development-standards.mdc"), aiRules, options);
+  writeFileIfMissing(path.join(cwd, ".github", "copilot-instructions.md"), aiRules, options);
+
   const statusBoard = path.join(packageRoot, "docs", "agents", "PROJECT_STATUS_BOARD.md");
   copyFileIfMissing(statusBoard, path.join(cwd, "PROJECT_PROGRESS.md"), options);
 
@@ -138,6 +160,8 @@ function initProject(options = {}) {
 
   log("");
   log("初始化完成。");
+  log("已生成 AI 强制执行入口。后续 AI 必须先读取 AGENTS.md 和 docs/process/AI_ENFORCEMENT.md 再执行任务。");
+  log("建议先运行：standards guard");
   log("下一步：请描述你的项目需求、目标用户、核心功能、技术偏好和交付形式。");
   log("后续除代码、命令、路径、API 字段、配置项和专有名词外，默认使用简体中文。");
 }
@@ -148,10 +172,13 @@ function checkKit() {
     "AGENTS.md",
     "docs/AI_BOOTSTRAP.md",
     "docs/process/LANGUAGE_POLICY.md",
+    "docs/process/AI_ENFORCEMENT.md",
     "docs/process/AI_WORKFLOW_FACTORY.md",
     "docs/process/ENGINEERING_WORKFLOW.md",
+    "docs/process/TECH_DECISION.md",
     "docs/workflows/WORKFLOW_TEMPLATE.md",
     "skills/ai-development-standards/SKILL.md",
+    "templates/AI_AGENT_RULES.md",
     "templates/STANDARDS_UPSTREAM_CONFIG.json"
   ];
 
@@ -170,12 +197,70 @@ function checkKit() {
   log("规范包完整性检查通过。");
 }
 
+function guardProject() {
+  const required = [
+    "AGENTS.md",
+    "docs/process/AI_ENFORCEMENT.md",
+    "docs/process/DEVELOPMENT_STANDARDS.md",
+    "docs/process/ENGINEERING_WORKFLOW.md",
+    "docs/process/MINIMAL_IMPLEMENTATION.md",
+    "docs/process/TECH_DECISION.md",
+    "docs/process/QA_STRATEGY.md",
+    "docs/process/LANGUAGE_POLICY.md",
+    "PROJECT_PROGRESS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    ".cursor/rules/ai-development-standards.mdc",
+    ".github/copilot-instructions.md"
+  ];
+
+  const recommended = [
+    "docs/security/SECURITY_BASELINE.md",
+    "docs/release/RELEASE_CHECKLIST.md",
+    "docs/agents/MAIN_SESSION_CONTROL.md",
+    "docs/agents/SPECIALIST_DELIVERABLES.md",
+    "docs/workflows/WORKFLOW_TEMPLATE.md",
+    "docs/process/STANDARDS_UPSTREAM_CONFIG.json"
+  ];
+
+  let ok = true;
+  log("== AI 开发规范强制约束检查 ==");
+
+  for (const relative of required) {
+    if (exists(path.join(cwd, relative))) {
+      log(`OK ${relative}`);
+    } else {
+      ok = false;
+      console.error(`MISSING ${relative}`);
+    }
+  }
+
+  for (const relative of recommended) {
+    if (exists(path.join(cwd, relative))) {
+      log(`OK ${relative}`);
+    } else {
+      console.error(`WARN ${relative}`);
+    }
+  }
+
+  if (!ok) {
+    console.error("");
+    console.error("强制约束不完整。请运行：standards init");
+    console.error("如需覆盖旧规则，请运行：standards init --force");
+    process.exit(1);
+  }
+
+  log("");
+  log("强制约束检查通过。AI 应先读取 AGENTS.md 和 docs/process/AI_ENFORCEMENT.md，再开始任何任务。");
+}
+
 function usage() {
   log(`用法：
   npx ai-development-standards-kit init [--force] [--skip-rtk]
   npx ai-development-standards-kit install-skill
   npx ai-development-standards-kit setup-rtk
   npx ai-development-standards-kit check
+  npx ai-development-standards-kit guard
   npx ai-development-standards-kit version
 
 说明：
@@ -183,6 +268,7 @@ function usage() {
   install-skill 安装 Codex skill 到 ~/.codex/skills
   setup-rtk     初始化 RTK 上下文压缩工具
   check         检查 npm 包内规范文件是否完整
+  guard         检查当前项目是否具备 AI 强制执行规范入口
   --force       覆盖已存在的规范文件
   --skip-rtk    初始化时跳过 RTK
 `);
@@ -207,6 +293,9 @@ switch (command) {
     break;
   case "check":
     checkKit();
+    break;
+  case "guard":
+    guardProject();
     break;
   case "version": {
     const pkg = JSON.parse(fs.readFileSync(path.join(packageRoot, "package.json"), "utf8"));

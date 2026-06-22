@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.15.0
+
+- 新增 `docs/process/AI_ENFORCEMENT.md`，作为所有 AI coding agent 的强制开工入口。
+- 新增 `docs/process/TECH_DECISION.md`，要求技术选型按安全、性能、维护性、稳定性、生态兼容、交付效率和可替换性评分，不得只按最快实现选择。
+- 初始化时生成 `CLAUDE.md`、`GEMINI.md`、`.cursor/rules/ai-development-standards.mdc` 和 `.github/copilot-instructions.md`，覆盖更多 AI 工具规则入口。
+- 新增 `standards guard`，检查当前项目是否具备 AI 强制执行规范入口。
+
 ## 0.14.0
 
 - 包名保持 `ai-development-standards-kit` 不变，安装后推荐使用短命令 `standards init`。

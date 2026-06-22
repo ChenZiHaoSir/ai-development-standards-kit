@@ -71,14 +71,37 @@ standards init
 standards init --skip-rtk
 standards init --force
 standards check
+standards guard
 ```
 
-`init` 会复制规范文档、状态看板、工作流模板和上游配置，安装 Codex skill，并尝试初始化 RTK。默认不会覆盖已存在文件，除非传入 `--force`。
+`init` 会复制规范文档、AI 强制执行入口、状态看板、工作流模板和上游配置，安装 Codex skill，并尝试初始化 RTK。默认不会覆盖已存在文件，除非传入 `--force`。
+
+初始化后会生成：
+
+```text
+AGENTS.md
+docs/process/AI_ENFORCEMENT.md
+docs/process/TECH_DECISION.md
+CLAUDE.md
+GEMINI.md
+.cursor/rules/ai-development-standards.mdc
+.github/copilot-instructions.md
+PROJECT_PROGRESS.md
+```
+
+这些文件用于约束不同 AI 工具：开工前必须读规范，技术选型必须考虑安全、性能、维护性、稳定性和可替换性，交付前必须输出质量门禁结果。
+
+检查当前项目是否具备强制约束入口：
+
+```bash
+standards guard
+```
 
 也可以不安装，直接使用 npx：
 
 ```bash
 npx ai-development-standards-kit init
+npx ai-development-standards-kit guard
 ```
 
 ### 3. 作为新项目规范模板
@@ -94,6 +117,8 @@ docs/process/LANGUAGE_POLICY.md
 docs/process/AI_WORKFLOW_FACTORY.md
 docs/process/CONTEXT_BUDGET.md
 docs/process/MINIMAL_IMPLEMENTATION.md
+docs/process/AI_ENFORCEMENT.md
+docs/process/TECH_DECISION.md
 docs/process/QA_STRATEGY.md
 docs/process/STANDARDS_EVOLUTION.md
 docs/workflows/WORKFLOW_TEMPLATE.md

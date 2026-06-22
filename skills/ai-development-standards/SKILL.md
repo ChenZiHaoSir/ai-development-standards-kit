@@ -16,6 +16,8 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - Always read `references/core-standards.md`.
    - For repo exploration, command output, logs, or worker-agent handoffs, read `references/context-budget.md`.
    - For language requirements, read the repository `docs/process/LANGUAGE_POLICY.md` when available.
+   - For mandatory AI execution rules, read `docs/process/AI_ENFORCEMENT.md` when available.
+   - For technology choices or dependency changes, read `docs/process/TECH_DECISION.md` when available.
    - For ambiguous tasks, repeated tasks, self-review, project manuals, or reusable workflows, read `docs/process/AI_WORKFLOW_FACTORY.md` when available.
    - For implementation planning or code review, read `references/minimal-implementation.md`.
    - For new project setup, read `references/project-scaffold.md`.
@@ -30,6 +32,8 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - `docs/process/ENGINEERING_WORKFLOW.md`
    - `docs/process/LANGUAGE_POLICY.md`
    - `docs/process/AI_WORKFLOW_FACTORY.md`
+   - `docs/process/AI_ENFORCEMENT.md`
+   - `docs/process/TECH_DECISION.md`
    - `docs/process/CONTEXT_BUDGET.md`
    - `docs/process/MINIMAL_IMPLEMENTATION.md`
    - `docs/process/QA_STRATEGY.md`
@@ -56,6 +60,8 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
 - Default to Simplified Chinese for user-facing communication and generated project documents. Translate third-party English template text before final delivery.
 - Ask only materially useful clarification questions before executing ambiguous tasks; do not pretend missing context is known.
 - After producing plans, architecture, important docs, important code, or release steps, run a self-review pass and revise.
+- Before starting implementation, read `AGENTS.md` and `docs/process/AI_ENFORCEMENT.md`; before choosing frameworks, dependencies, storage, auth, deployment, UI libraries, testing tools, or AI SDKs, read `docs/process/TECH_DECISION.md`.
+- Do not choose technology only because it is fastest to implement; evaluate security, maintainability, stability, performance, ecosystem compatibility, delivery speed, and replaceability.
 - When a task repeats three or more times, propose a reusable workflow under `docs/workflows/`.
 - Prefer the project's existing framework conventions over inventing a new structure.
 - Keep generated standards concise enough to be read, but concrete enough to enforce.
