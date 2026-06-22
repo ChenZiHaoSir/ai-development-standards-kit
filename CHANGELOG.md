@@ -2,8 +2,8 @@
 
 ## 0.14.0
 
-- 发布短包名 `czhstd`，支持通过 `npx czhstd init` 初始化项目。
-- 新增 `czhstd` 和 `aistd` CLI bin 别名，保留 `ai-development-standards-kit` 和 `standards` 兼容入口。
+- 包名保持 `ai-development-standards-kit` 不变，安装后推荐使用短命令 `standards init`。
+- 保留 `ai-development-standards-kit` 和 `standards` CLI 入口。
 
 ## 0.13.0
 

@@ -51,25 +51,31 @@ chmod +x ./scripts/bootstrap-ai-standards.sh
 docs/AI_BOOTSTRAP.md
 ```
 
-### 2. 通过 npx 初始化项目
+### 2. 通过 npx 安装并使用短命令
 
-发布到 npm 后，用户可以在自己的项目根目录执行：
+安装命令保持使用正式包名：
 
 ```bash
-npx czhstd init
+npm install -g ai-development-standards-kit
+```
+
+安装后，在自己的项目根目录使用短命令：
+
+```bash
+standards init
 ```
 
 常用选项：
 
 ```bash
-npx czhstd init --skip-rtk
-npx czhstd init --force
-npx czhstd check
+standards init --skip-rtk
+standards init --force
+standards check
 ```
 
 `init` 会复制规范文档、状态看板、工作流模板和上游配置，安装 Codex skill，并尝试初始化 RTK。默认不会覆盖已存在文件，除非传入 `--force`。
 
-兼容旧包名：
+也可以不安装，直接使用 npx：
 
 ```bash
 npx ai-development-standards-kit init

@@ -1,12 +1,10 @@
 {
-  "name": "czhstd",
+  "name": "ai-development-standards-kit",
   "version": "0.14.0",
   "description": "AI development standards kit and project bootstrap CLI.",
   "license": "MIT",
   "type": "commonjs",
   "bin": {
-    "czhstd": "bin/standards.js",
-    "aistd": "bin/standards.js",
     "ai-development-standards-kit": "bin/standards.js",
     "standards": "bin/standards.js"
   },
