@@ -46,6 +46,19 @@
 - 通用函数 / service：
 - 禁止跨越的边界：
 
+## 专业文档状态
+
+| 文档 | 负责人 | 状态 | 路径 | 待确认项 |
+| --- | --- | --- | --- | --- |
+| PRD | Product / PM | 待完成 | `docs/product/PRD.md` |  |
+| UI/UX Spec | UI / UX | 待完成 | `docs/product/UX_SPEC.md` |  |
+| Frontend Spec | Frontend | 待完成 | `docs/engineering/FRONTEND_SPEC.md` |  |
+| API Spec | Backend | 待完成 | `docs/engineering/API_SPEC.md` |  |
+| Data Model | Backend | 待完成 | `docs/engineering/DATA_MODEL.md` |  |
+| QA Plan | QA / Testing | 待完成 | `docs/process/TEST_PLAN.md` |  |
+| Security | Security | 待完成 | `docs/security/SECURITY.md` |  |
+| Release Runbook | DevOps / SRE | 待完成 | `docs/release/RELEASE_RUNBOOK.md` |  |
+
 ## 风险与阻塞
 
 | ID | 风险/阻塞 | 影响 | 负责人 | 处理方案 | 状态 |

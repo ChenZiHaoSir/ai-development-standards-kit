@@ -46,6 +46,24 @@
 - 不能跨越的职责边界：
 ```
 
+## 专业交付物
+
+每个子智能体必须产出自己的专业文档，不能只交代码或口头结论。
+
+| 角色 | 必须交付 |
+| --- | --- |
+| Product / PM | PRD、MVP 范围、验收标准、非目标 |
+| UI / UX | UI/UX 文档、页面状态、设计 token、组件清单 |
+| Frontend | 前端集成文档、路由、组件结构、状态模型、API 依赖 |
+| Backend | API 文档、数据模型、错误码、权限、迁移说明 |
+| AI Engineer | Prompt 文档、上下文字段、输出 schema、审计和降级 |
+| QA / Testing | 测试计划、验收矩阵、验证命令、缺陷清单 |
+| Security | 数据分级、权限矩阵、日志脱敏和高风险操作清单 |
+| DevOps / SRE | 环境、配置、CI/CD、部署、监控、回滚 |
+| Docs | README、使用说明、CHANGELOG、发布说明 |
+
+详细模板见 `docs/agents/SPECIALIST_DELIVERABLES.md`。
+
 ## 职责边界规则
 
 - UI 子智能体不能顺手实现后端。

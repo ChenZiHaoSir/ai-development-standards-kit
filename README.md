@@ -58,6 +58,7 @@ docs/agents/AGENT_ORCHESTRATION.md
 docs/agents/MAIN_SESSION_CONTROL.md
 docs/agents/SPECIALIST_WORKERS.md
 docs/agents/PARALLEL_DEVELOPMENT.md
+docs/agents/SPECIALIST_DELIVERABLES.md
 docs/agents/PROJECT_STATUS_BOARD.md
 ```
 
@@ -84,6 +85,7 @@ docs/agents/PROJECT_STATUS_BOARD.md
 - 用户只和主会话交流。
 - 主会话负责项目状态、任务拆分、调度、整合和质量门禁。
 - 子智能体只负责单一专业任务，例如 UI、前端、后端、测试、安全、DevOps、文档。
+- 开发前每个活跃专业智能体必须产出本角色文档，例如 UI 文档、前端集成文档、后端 API 文档、测试计划和安全文档。
 - 并行开发必须先明确接口契约、文件边界、输入输出和验收标准。
 
 ## 项目底线

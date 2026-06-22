@@ -36,6 +36,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
    - `docs/agents/MAIN_SESSION_CONTROL.md`
    - `docs/agents/SPECIALIST_WORKERS.md`
    - `docs/agents/PARALLEL_DEVELOPMENT.md`
+   - `docs/agents/SPECIALIST_DELIVERABLES.md`
    - `PROJECT_PROGRESS.md` or equivalent status board
    - `.github` or platform-equivalent issue/PR templates when applicable
 4. Convert rules into enforceable checks whenever the project provides the tooling: lint, typecheck, tests, build, lockfile validation, dependency scan, secret scan, smoke/E2E, and release checklist.
@@ -51,6 +52,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
 - For AI features, require prompt versioning, centralized model calls, content review, rate limits, circuit breakers, cost tracking, and audit metadata.
 - If `agency-agents` is installed, recommend specific specialist agents by task; do not claim that they ran unless they actually were invoked by the user/tooling.
 - Default to a main-session control model: one user-facing orchestrator conversation, specialist worker conversations for single-skill execution, and a status board maintained by the orchestrator.
+- Before implementation, require specialist deliverables for each active role: Product, UI/UX, Frontend, Backend, QA, Security, DevOps, AI, and Docs as applicable.
 - When standards gaps are discovered in a downstream project, record local patches and upstream proposals. Local patches may take effect immediately in that project; upstream changes must be submitted as reviewable proposals and never auto-merged.
 - If the kit is provided as a folder or zip, read `STANDARDS_UPSTREAM_CONFIG.json` or `standards-upstream.example.json` to find the upstream Git remote before preparing a proposal.
 

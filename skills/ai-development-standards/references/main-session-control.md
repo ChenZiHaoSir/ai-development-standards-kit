@@ -12,6 +12,7 @@ Default operating model:
 - Maintain project status: goal, phase, milestone, task board, blockers, risks, validation, next step.
 - Split work into specialist tasks with clear `/goal`, inputs, outputs, allowed files, forbidden files, and acceptance criteria.
 - Decide what can run in parallel and what must run serially.
+- Require each specialist to produce its own artifact before implementation starts.
 - Coordinate integration requests between specialist workers.
 - Integrate worker outputs, resolve conflicts, remove duplicates, and enforce standards.
 - Report only high-signal status to the user.
@@ -28,6 +29,21 @@ Default operating model:
 - Docs worker: README, changelog, usage docs, release notes.
 
 No worker should implement across roles unless the orchestrator explicitly reassigns the task.
+
+## Specialist Deliverables
+
+Before parallel implementation starts, the orchestrator should ensure each relevant specialist has produced a reviewable document:
+
+- Product: PRD, MVP scope, non-goals, acceptance criteria.
+- UI/UX: user flows, page states, design tokens, component inventory.
+- Frontend: routes, component structure, state model, API dependencies, mocks.
+- Backend: API contract, fields, error codes, permissions, data model, migrations.
+- AI: prompt versions, context fields, output schema, audit, fallback.
+- QA: test plan, acceptance matrix, validation commands.
+- Security: data classification, permission matrix, log redaction, high-risk operations.
+- DevOps: environments, config, CI/CD, monitoring, rollback.
+
+Read or create `docs/agents/SPECIALIST_DELIVERABLES.md` when this level of alignment is needed.
 
 ## Cross-Worker Integration Requests
 

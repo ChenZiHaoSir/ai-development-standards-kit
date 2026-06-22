@@ -16,6 +16,10 @@ docs/
   engineering/
     ARCHITECTURE.md
     DEVELOPMENT_PLAN.md
+    API_SPEC.md
+    DATA_MODEL.md
+    FRONTEND_SPEC.md
+    AI_SPEC.md
   process/
     DEVELOPMENT_STANDARDS.md
     ENGINEERING_WORKFLOW.md
@@ -37,6 +41,7 @@ docs/
 Minimum new-project checklist:
 
 - Product main path and MVP non-goals are written.
+- Specialist deliverables exist or are explicitly marked not applicable: PRD, UI/UX spec, frontend spec, API spec, data model, QA plan, security, release runbook.
 - Framework and directory conventions are selected.
 - Architecture boundaries and data flow are documented.
 - Unified commands exist for lint, typecheck, test, smoke when applicable, and build.
