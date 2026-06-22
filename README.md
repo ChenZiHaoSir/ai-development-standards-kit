@@ -49,7 +49,17 @@ skills/ai-development-standards/
 使用 $ai-development-standards 审查当前功能是否满足开发规范。
 ```
 
-### 3. 作为 Agent 编排手册
+### 3. 安装 RTK 上下文压缩工具
+
+RTK 是推荐的可选增强工具，用于压缩命令输出、减少 token 噪声，不会改变项目代码产出逻辑。
+
+```bash
+./scripts/setup-rtk.sh
+```
+
+后续用户把本规范喂给 AI 后，AI 应先检测 `rtk` 是否存在；缺失时可以按本脚本自动安装，安装失败则降级使用普通命令并控制输出长度。
+
+### 4. 作为 Agent 编排手册
 
 详见：
 

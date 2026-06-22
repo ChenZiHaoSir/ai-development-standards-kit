@@ -18,6 +18,21 @@ Prefer:
 
 ## RTK
 
+`rtk` is a recommended optional tool, not a runtime dependency. It compresses CLI output before it enters the AI context. It must not change source code, build artifacts, or project behavior.
+
+If `rtk` is missing and the project allows tool bootstrap, run:
+
+```bash
+./scripts/setup-rtk.sh
+```
+
+Install policy:
+
+- Use `brew install rtk` when Homebrew exists.
+- If Homebrew is missing, print the official install command and ask for the environment/user decision.
+- If installation fails, continue with normal bounded commands.
+- Do not add `rtk` to application dependencies or lockfiles unless the project itself is a developer-tooling project.
+
 If `rtk` is installed, prefer compact command proxies:
 
 ```bash
@@ -32,6 +47,19 @@ rtk pnpm test
 rtk tsc
 rtk lint
 rtk gain
+```
+
+For Codex, initialize optional instructions with:
+
+```bash
+rtk init --codex --dry-run
+rtk init --codex
+```
+
+Only use a global hook when the user permits global config changes:
+
+```bash
+rtk init --global
 ```
 
 If unavailable, use normal commands with limits:
@@ -69,3 +97,8 @@ Token saving must not remove:
 - Performance metrics.
 - Raw output paths for long logs.
 
+When using `rtk`:
+
+- For high-risk decisions such as migrations, permissions, security, billing, release, deletion, or rollback, inspect the relevant raw output or full diff snippet.
+- For failed tests, builds, or security scans, use `rtk` for the first pass, but preserve the failing command, key error, and raw log path.
+- If the `rtk` summary conflicts with raw output, trust the raw output.

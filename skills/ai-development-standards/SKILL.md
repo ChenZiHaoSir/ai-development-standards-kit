@@ -47,7 +47,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
 - Do not weaken the security, testing, release, or architecture baseline without an explicit user decision.
 - Prefer the project's existing framework conventions over inventing a new structure.
 - Keep generated standards concise enough to be read, but concrete enough to enforce.
-- Apply context-budget discipline: summarize before expanding, prefer failure output over success noise, send worker agents only the context they need, and preserve raw-output paths for long logs.
+- Apply context-budget discipline: summarize before expanding, prefer failure output over success noise, send worker agents only the context they need, and preserve raw-output paths for long logs. If `rtk` is missing and tool bootstrap is allowed, run `./scripts/setup-rtk.sh`; if installation fails, continue with bounded normal commands.
 - Apply minimal implementation discipline: verify the feature needs to exist, prefer standard library/platform/native database capabilities, reuse installed dependencies, and avoid speculative abstractions.
 - For AI features, require prompt versioning, centralized model calls, content review, rate limits, circuit breakers, cost tracking, and audit metadata.
 - If `agency-agents` is installed, recommend specific specialist agents by task; do not claim that they ran unless they actually were invoked by the user/tooling.
