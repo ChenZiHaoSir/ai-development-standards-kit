@@ -19,6 +19,7 @@ docs/
   process/
     DEVELOPMENT_STANDARDS.md
     ENGINEERING_WORKFLOW.md
+    CONTEXT_BUDGET.md
     QA_STRATEGY.md
     RISK_REGISTER.md
     STANDARDS_UPSTREAM_CONFIG.json
@@ -39,6 +40,7 @@ Minimum new-project checklist:
 - Framework and directory conventions are selected.
 - Architecture boundaries and data flow are documented.
 - Unified commands exist for lint, typecheck, test, smoke when applicable, and build.
+- Context budget rules exist for command output, logs, repo exploration, and worker-agent handoffs.
 - CI runs lockfile validation, lint, typecheck, test, build, dependency scan, and secret scan.
 - Sensitive data handling, permissions, logging, and audit rules are documented.
 - PR and issue templates exist.

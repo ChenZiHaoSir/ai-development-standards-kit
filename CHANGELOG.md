@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+
+- 融合 `rtk` 的 token 节省思想，新增上下文预算规范。
+- 新增 `docs/process/CONTEXT_BUDGET.md` 和 skill 引用 `context-budget.md`。
+- 更新工程流程和 QA 策略，要求长输出摘要优先并保留原始输出路径。
+
 ## 0.4.0
 
 - 新增上游仓库配置模板，支持压缩包或普通文件夹分发时仍能提交规范优化提案。

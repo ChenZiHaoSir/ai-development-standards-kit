@@ -19,6 +19,7 @@ README.md
 AGENTS.md
 docs/process/DEVELOPMENT_STANDARDS.md
 docs/process/ENGINEERING_WORKFLOW.md
+docs/process/CONTEXT_BUDGET.md
 docs/process/MINIMAL_IMPLEMENTATION.md
 docs/process/QA_STRATEGY.md
 docs/process/STANDARDS_EVOLUTION.md
@@ -88,6 +89,7 @@ docs/agents/PROJECT_STATUS_BOARD.md
 ## 项目底线
 
 - 不以“能跑”为完成标准，以“用户能稳定完成目标”为完成标准。
+- 不把无关文件、完整日志和大型命令输出塞进 AI 上下文；先摘要、定位、分段读取，必要时使用 `rtk` 等压缩输出工具。
 - 不默认写复杂实现；先判断是否需要做，再优先使用标准库、平台原生能力和已有依赖。
 - 不跳过需求、架构、测试、安全和发布门禁。
 - 不把 AI 输出直接写入用户最终内容，必须可审阅、可回滚、可追踪。
