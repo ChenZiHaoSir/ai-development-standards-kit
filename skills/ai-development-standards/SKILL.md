@@ -16,6 +16,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
    - For new project setup, read `references/project-scaffold.md`.
    - For Agent orchestration, read `references/agent-playbook.md`.
    - For main-session multi-agent control, read `references/main-session-control.md`.
+   - For standards feedback, local patches, or upstream improvement proposals, read `references/standards-evolution.md`.
    - For reviews or completion checks, read `references/quality-gates.md`.
 3. Produce or update the smallest useful set of artifacts:
    - `AGENTS.md`
@@ -23,6 +24,10 @@ Use this skill to apply the user's reusable project governance baseline: develop
    - `docs/process/ENGINEERING_WORKFLOW.md`
    - `docs/process/MINIMAL_IMPLEMENTATION.md`
    - `docs/process/QA_STRATEGY.md`
+   - `docs/process/STANDARDS_EVOLUTION.md`
+   - `docs/process/STANDARDS_FEEDBACK.md`
+   - `docs/process/STANDARDS_LOCAL_PATCHES.md`
+   - `docs/process/STANDARDS_UPSTREAM_PROPOSALS.md`
    - `docs/security/SECURITY.md`
    - `docs/release/RELEASE_CHECKLIST.md`
    - `docs/agents/MAIN_SESSION_CONTROL.md`
@@ -42,6 +47,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
 - For AI features, require prompt versioning, centralized model calls, content review, rate limits, circuit breakers, cost tracking, and audit metadata.
 - If `agency-agents` is installed, recommend specific specialist agents by task; do not claim that they ran unless they actually were invoked by the user/tooling.
 - Default to a main-session control model: one user-facing orchestrator conversation, specialist worker conversations for single-skill execution, and a status board maintained by the orchestrator.
+- When standards gaps are discovered in a downstream project, record local patches and upstream proposals. Local patches may take effect immediately in that project; upstream changes must be submitted as reviewable proposals and never auto-merged.
 
 ## Common Prompts
 
@@ -59,4 +65,8 @@ Use $ai-development-standards to create AGENTS.md, docs/process, security baseli
 
 ```text
 Use $ai-development-standards to run this project with one main orchestrator session and specialist worker agents for UI, frontend, backend, QA, security, DevOps, and docs.
+```
+
+```text
+Use $ai-development-standards to record a standards improvement, apply it as a local patch, and prepare an upstream proposal for review.
 ```

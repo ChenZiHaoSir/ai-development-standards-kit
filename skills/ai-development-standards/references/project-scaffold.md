@@ -21,6 +21,9 @@ docs/
     ENGINEERING_WORKFLOW.md
     QA_STRATEGY.md
     RISK_REGISTER.md
+    STANDARDS_FEEDBACK.md
+    STANDARDS_LOCAL_PATCHES.md
+    STANDARDS_UPSTREAM_PROPOSALS.md
   security/
     SECURITY.md
   release/
@@ -40,4 +43,4 @@ Minimum new-project checklist:
 - PR and issue templates exist.
 - Release checklist and rollback plan exist.
 - Project progress and TODO tracking are explicit.
-
+- Standards feedback and local patch tracking exist when the project is using this standards kit.

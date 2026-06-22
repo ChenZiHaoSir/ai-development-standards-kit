@@ -21,6 +21,7 @@ docs/process/DEVELOPMENT_STANDARDS.md
 docs/process/ENGINEERING_WORKFLOW.md
 docs/process/MINIMAL_IMPLEMENTATION.md
 docs/process/QA_STRATEGY.md
+docs/process/STANDARDS_EVOLUTION.md
 docs/security/SECURITY_BASELINE.md
 docs/release/RELEASE_CHECKLIST.md
 templates/
@@ -91,3 +92,4 @@ docs/agents/PROJECT_STATUS_BOARD.md
 - 不把 AI 输出直接写入用户最终内容，必须可审阅、可回滚、可追踪。
 - 不提交密钥、真实用户数据、本地配置、临时截图和构建产物。
 - 不让规范停留在文档，必须进入模板、CI、Review、检查清单和自动扫描。
+- 下游项目可以自动记录并执行本地规范补丁；上游规范只能自动提案，必须由维护者审核后合并。

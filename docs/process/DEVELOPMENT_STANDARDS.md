@@ -131,3 +131,16 @@ PR 合并前默认强制：
 - 性能影响已评估。
 - 相关文档已同步。
 - 工作区没有无关变更、临时文件、密钥或真实用户数据。
+
+## 11. 规范演进
+
+规范必须允许在真实项目中持续进化。
+
+- 使用过程中发现规范缺口、重复问题、模糊规则或更好的实践时，AI 必须记录到 `docs/process/STANDARDS_FEEDBACK.md`。
+- 当前项目需要立即采用的新规则，应写入 `docs/process/STANDARDS_LOCAL_PATCHES.md`，作为本地补丁执行。
+- 本地补丁只能增强、细化或澄清规范，不能削弱安全、测试、质量、发布和数据保护底线。
+- 适合沉淀到通用规范库的改进，应写入 `docs/process/STANDARDS_UPSTREAM_PROPOSALS.md`。
+- AI 可以生成上游候选分支、提交或 patch，但不能自动合并到上游主分支。
+- 上游规范变更必须由维护者定期审核，审核结论为 `ACCEPTED / NEEDS_REVISION / REJECTED / LOCAL_ONLY`。
+
+详细流程见 `docs/process/STANDARDS_EVOLUTION.md`。
