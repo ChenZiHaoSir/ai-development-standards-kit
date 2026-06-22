@@ -7,6 +7,20 @@
 - Use mature, maintained frameworks unless the architecture document justifies an exception.
 - Completion means stable user success, not just code that runs.
 - Product, architecture, testing, release, and security docs must change with implementation.
+- Default to the minimum implementation that satisfies the user goal without weakening safety, validation, accessibility, or data protection.
+
+## Minimal Implementation Ladder
+
+Before writing custom code, stop at the first option that works:
+
+1. Does this need to exist? If speculative, skip it.
+2. Does the language standard library do it? Use that.
+3. Does the native platform, browser, operating system, database, or cloud feature cover it? Use that.
+4. Does an already-installed dependency solve it? Reuse it.
+5. Can it be one or two clear lines? Keep it that small.
+6. Only then write the minimum custom implementation.
+
+Do not create abstractions, factories, plugin systems, configuration, or layers for a single implementation or hypothetical future need.
 
 ## Architecture Boundaries
 

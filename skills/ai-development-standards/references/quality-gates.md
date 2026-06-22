@@ -11,6 +11,7 @@ Required unless the user explicitly approves an exception:
 - Build passes.
 - No secrets, tokens, real user data, local config, temporary screenshots, or generated build artifacts in the diff.
 - Docs updated for product, architecture, security, release, or user-path changes.
+- No unnecessary dependency, speculative abstraction, duplicate wrapper, or hand-rolled standard library/platform feature unless justified.
 
 ## Risk-Based Extra Gates
 
@@ -33,5 +34,4 @@ Lead findings in this order:
 5. Unsafe external service or AI behavior.
 6. Missing error handling, retries, rollback, or observability.
 7. Missing tests or verification evidence.
-8. Maintainability and duplication.
-
+8. Over-engineering, unnecessary dependencies, maintainability, and duplication.

@@ -6,6 +6,7 @@
 
 - `ai-development-guidelines` 的通用研发规范：作为质量、安全、测试、发布和协作底线。
 - `agency-agents` 的 232 个专业 Agent：作为按阶段调用的专家角色库。
+- `ponytail` 的最小必要实现思想：作为反过度工程、少依赖、少抽象、优先平台能力的实现约束。
 
 ## 如何使用
 
@@ -18,6 +19,7 @@ README.md
 AGENTS.md
 docs/process/DEVELOPMENT_STANDARDS.md
 docs/process/ENGINEERING_WORKFLOW.md
+docs/process/MINIMAL_IMPLEMENTATION.md
 docs/process/QA_STRATEGY.md
 docs/security/SECURITY_BASELINE.md
 docs/release/RELEASE_CHECKLIST.md
@@ -84,6 +86,7 @@ docs/agents/PROJECT_STATUS_BOARD.md
 ## 项目底线
 
 - 不以“能跑”为完成标准，以“用户能稳定完成目标”为完成标准。
+- 不默认写复杂实现；先判断是否需要做，再优先使用标准库、平台原生能力和已有依赖。
 - 不跳过需求、架构、测试、安全和发布门禁。
 - 不把 AI 输出直接写入用户最终内容，必须可审阅、可回滚、可追踪。
 - 不提交密钥、真实用户数据、本地配置、临时截图和构建产物。

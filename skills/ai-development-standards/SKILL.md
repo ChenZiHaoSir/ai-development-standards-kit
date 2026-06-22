@@ -12,6 +12,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
 1. Identify the project type: frontend, backend, full-stack, desktop, mobile, AI service, data service, or mixed.
 2. Read the relevant references:
    - Always read `references/core-standards.md`.
+   - For implementation planning or code review, read `references/minimal-implementation.md`.
    - For new project setup, read `references/project-scaffold.md`.
    - For Agent orchestration, read `references/agent-playbook.md`.
    - For main-session multi-agent control, read `references/main-session-control.md`.
@@ -20,6 +21,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
    - `AGENTS.md`
    - `docs/process/DEVELOPMENT_STANDARDS.md`
    - `docs/process/ENGINEERING_WORKFLOW.md`
+   - `docs/process/MINIMAL_IMPLEMENTATION.md`
    - `docs/process/QA_STRATEGY.md`
    - `docs/security/SECURITY.md`
    - `docs/release/RELEASE_CHECKLIST.md`
@@ -36,6 +38,7 @@ Use this skill to apply the user's reusable project governance baseline: develop
 - Do not weaken the security, testing, release, or architecture baseline without an explicit user decision.
 - Prefer the project's existing framework conventions over inventing a new structure.
 - Keep generated standards concise enough to be read, but concrete enough to enforce.
+- Apply minimal implementation discipline: verify the feature needs to exist, prefer standard library/platform/native database capabilities, reuse installed dependencies, and avoid speculative abstractions.
 - For AI features, require prompt versioning, centralized model calls, content review, rate limits, circuit breakers, cost tracking, and audit metadata.
 - If `agency-agents` is installed, recommend specific specialist agents by task; do not claim that they ran unless they actually were invoked by the user/tooling.
 - Default to a main-session control model: one user-facing orchestrator conversation, specialist worker conversations for single-skill execution, and a status board maintained by the orchestrator.
