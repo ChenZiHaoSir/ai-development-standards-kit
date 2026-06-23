@@ -1,6 +1,6 @@
 {
   "name": "ai-development-standards-kit",
-  "version": "0.26.0",
+  "version": "0.27.0",
   "description": "AI development standards kit and project bootstrap CLI.",
   "license": "MIT",
   "type": "commonjs",

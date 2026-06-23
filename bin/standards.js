@@ -140,7 +140,7 @@ function checkForUpdate() {
 
   if (comparison > 0) {
     log("");
-    log("当前本地版本高于 npm latest，可能是本地开发版或预发布版本。");
+    log("当前本地版本高于 npm latest，可能是本地开发版或预发布版本（非正式发布）。");
     return;
   }
 
@@ -330,13 +330,13 @@ function installSkill() {
 function setupRtk() {
   if (!commandExists("rtk")) {
     if (commandExists("brew")) {
-      log("未检测到 RTK，使用 Homebrew 安装：brew install rtk");
+      log("未检测到 RTK，使用 Homebrew 安装（macOS）：brew install rtk");
       if (!run("brew", ["install", "rtk"])) {
         log("RTK 安装失败。后续请使用普通命令并控制输出长度。");
         return;
       }
     } else {
-      log("未检测到 RTK，也未检测到 Homebrew。可手动安装：");
+      log("未检测到 RTK，也未检测到 Homebrew（macOS 包管理器）。可手动安装：");
       log("curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh");
       return;
     }
