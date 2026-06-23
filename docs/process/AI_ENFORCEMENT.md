@@ -19,6 +19,18 @@ AI 必须在开始任务前读取并遵守以下文件：
 11. `docs/process/LANGUAGE_POLICY.md`
 12. `docs/process/LOCAL_TOOL_CONFIG.md`
 13. `docs/release/RELEASE_PLAN.md`
+14. `docs/process/API_DESIGN.md`
+15. `docs/process/GIT_CONVENTION.md`
+16. `docs/process/ENV_CONFIG.md`
+17. `docs/process/DATABASE_MIGRATION.md`
+18. `docs/process/CACHING_STRATEGY.md`
+19. `docs/process/ACCESSIBILITY.md`
+20. `docs/process/ERROR_HANDLING.md`
+21. `docs/process/CODE_REVIEW.md`
+22. `docs/process/FILE_UPLOAD.md`
+23. `docs/process/I18N.md`
+24. `docs/agents/SPECIALIST_DELIVERABLES.md`
+25. `docs/process/AI_WORKFLOW_FACTORY.md`
 14. `docs/agents/MAIN_SESSION_CONTROL.md`
 15. `docs/agents/AGENT_ROUTER.md`
 16. 当前任务相关的专业文档，例如 `docs/agents/`、`docs/security/`、`docs/release/`

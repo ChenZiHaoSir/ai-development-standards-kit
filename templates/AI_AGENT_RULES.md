@@ -19,6 +19,16 @@
 - `docs/process/QA_STRATEGY.md`
 - `docs/process/LANGUAGE_POLICY.md`
 - `docs/process/LOCAL_TOOL_CONFIG.md`
+- `docs/process/API_DESIGN.md`
+- `docs/process/GIT_CONVENTION.md`
+- `docs/process/ENV_CONFIG.md`
+- `docs/process/DATABASE_MIGRATION.md`
+- `docs/process/CACHING_STRATEGY.md`
+- `docs/process/ACCESSIBILITY.md`
+- `docs/process/ERROR_HANDLING.md`
+- `docs/process/CODE_REVIEW.md`
+- `docs/process/FILE_UPLOAD.md`
+- `docs/process/I18N.md`
 - `docs/release/RELEASE_PLAN.md`
 - `docs/agents/AGENT_ROUTER.md`
 - `docs/agents/MAIN_SESSION_CONTROL.md`
