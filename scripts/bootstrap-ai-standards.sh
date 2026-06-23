@@ -36,6 +36,14 @@ else
   echo "未找到 scripts/setup-rtk.sh。后续不使用 RTK。"
 fi
 
+if [[ "${SKIP_LOCAL_CONFIG:-0}" == "1" ]]; then
+  echo "检测到 SKIP_LOCAL_CONFIG=1，跳过本地可选工具配置。"
+elif command -v node >/dev/null 2>&1 && [[ -f bin/standards.js ]]; then
+  node bin/standards.js setup-local-config || echo "本地可选工具配置未完成。后续可手动运行：standards setup-local-config"
+else
+  echo "未检测到 node 或 bin/standards.js，跳过本地可选工具配置。"
+fi
+
 echo
 echo "初始化完成。"
 echo

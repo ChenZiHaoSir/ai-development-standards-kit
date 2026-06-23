@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.25.0
+
+- 强化 UI/UX 交付规则：风格探索可以使用多页面拼图，但正式开发必须每个关键页面独立设计稿，复杂页面必须补充状态稿。
+- 新增 `standards setup-local-config`，用于检查并配置需要本地密钥的可选工具，例如 gstack/GRSAI 生图配置。
+- `standards init` 和 `scripts/bootstrap-ai-standards.sh` 默认提示本地可选工具配置；非交互环境会自动跳过，不阻塞初始化。
+- 新增 `docs/process/LOCAL_TOOL_CONFIG.md`，登记哪些技能适合安装时配置，哪些凭据必须到具体业务任务再询问。
+- 强化密钥安全规则：真实 API Key、`.env`、`openai.json`、`.gstack/`、`*.secret.json` 等本地配置不得进入仓库、npm 包、GitHub 或 Gitee。
+
 ## 0.24.0
 
 - 新增 `docs/process/ACCEPTANCE_GATES.md`，把原型评审、交互设计评审、概要设计评审、排期评审、测试用例评审、提测、产品二次验收和预发布体验变成强制门禁。

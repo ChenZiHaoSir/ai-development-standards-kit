@@ -45,12 +45,14 @@ chmod +x ./scripts/bootstrap-ai-standards.sh
 ./scripts/install-skill.sh
 node bin/standards.js setup-agency-agents
 ./scripts/setup-rtk.sh
+node bin/standards.js setup-local-config
 ```
 
 8. 如果 agency-agents 安装失败，不阻塞后续流程，改用本项目内置角色编排规范和 `/goal` 模板。
 9. 如果 RTK 安装失败，不阻塞后续流程，改用普通命令并遵守 `docs/process/CONTEXT_BUDGET.md`。
-10. 读取 `docs/process/LANGUAGE_POLICY.md`，并确认后续默认使用简体中文。
-11. 安装完成后，AI 不应立刻创建业务项目，必须先请用户描述项目需求。
+10. 检查是否存在需要本地密钥的可选工具，例如 gstack/GRSAI 生图工具。只允许把密钥写入用户主目录下的本地配置，例如 `~/.gstack/openai.json`，不得写入当前项目目录。
+11. 读取 `docs/process/LANGUAGE_POLICY.md`，并确认后续默认使用简体中文。
+12. 安装完成后，AI 不应立刻创建业务项目，必须先请用户描述项目需求。
 
 ## 仓库地址处理示例
 
@@ -90,9 +92,12 @@ Use $ai-development-standards to initialize development standards and agent work
 - 可以自动安装本地 skill。
 - 可以自动下载并安装 `agency-agents` 到 Codex agents 目录；安装失败不得阻塞，必须降级为内置角色编排规范。
 - 可以自动安装或初始化 RTK，但安装失败不得阻塞。
+- 可以提示用户配置本地可选工具密钥；用户可跳过，跳过不得阻塞初始化。
+- 本地密钥、token、供应商 API Key、云服务凭据只能写入用户主目录或系统密钥管理器，不能写入仓库、压缩包、npm 包或生成的项目文件。
 - 不得自动合并上游规范提案。
 - 不得跳过用户需求澄清。
 - 不得在未确认项目目录时把规范文件写入错误位置。
 - 不得把本规范包本身当成用户业务项目。
 - 如果 AI 环境不能联网、不能解压或不能执行 shell，必须把缺失能力明确告诉用户，并给出手动命令。
 - 不得默认生成英文项目文档；除非用户明确要求英文或中英双语。
+- 发布、提交或生成补丁前，必须检查没有包含 `.env`、`openai.json`、`.gstack/`、`*.secret.json`、本地绝对路径和真实密钥。

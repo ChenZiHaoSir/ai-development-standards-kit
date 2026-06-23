@@ -4,3 +4,12 @@
 node_modules
 npm-debug.log*
 *.tgz
+.env
+.env.*
+!.env.example
+*.local
+*.secret.json
+openai.json
+.gstack
+.playwright-cli
+local-config

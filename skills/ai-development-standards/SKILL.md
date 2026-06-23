@@ -22,6 +22,7 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - For delivery shape, full-stack decisions, core paths, responsiveness, or stutter risks, read `docs/process/PERFORMANCE_BASELINE.md` when available.
    - For prototype review, interaction review, test case review, test submission, product acceptance, or pre-release acceptance, read `docs/process/ACCEPTANCE_GATES.md` when available.
    - For logs, monitoring, analytics events, alerts, post-release observation, or data redaction, read `docs/process/OBSERVABILITY_BASELINE.md` when available.
+   - For local tool config, API keys, token handling, gstack image generation config, deployment credentials, or secret storage, read `docs/process/LOCAL_TOOL_CONFIG.md` when available.
    - For release, gray rollout, full rollout, rollback, or production observation, read `docs/release/RELEASE_PLAN.md` when available.
    - For ambiguous tasks, repeated tasks, self-review, project manuals, or reusable workflows, read `docs/process/AI_WORKFLOW_FACTORY.md` when available.
    - For implementation planning or code review, read `references/minimal-implementation.md`.
@@ -44,6 +45,7 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
    - `docs/process/PERFORMANCE_BASELINE.md`
    - `docs/process/ACCEPTANCE_GATES.md`
    - `docs/process/OBSERVABILITY_BASELINE.md`
+   - `docs/process/LOCAL_TOOL_CONFIG.md`
    - `docs/process/CONTEXT_BUDGET.md`
    - `docs/process/MINIMAL_IMPLEMENTATION.md`
    - `docs/process/QA_STRATEGY.md`
@@ -95,6 +97,7 @@ Default output language is Simplified Chinese. Except for code, commands, paths,
 - The orchestrator must run a continuous dispatch loop: after a worker returns, validate the result, update the status board, derive the next executable tasks with `/goal`, and immediately continue dispatching until the project is complete, paused by the user, or blocked by a decision that requires user confirmation. If it does not continue dispatching, it must record the allowed stop reason in the status board.
 - Ask the user only for decisions that materially affect execution, such as scope changes, technology stack changes, security exceptions, cost risk, release risk, or conflicting requirements; after confirmation, record the decision and continue dispatching.
 - Before implementation, require specialist deliverables for each active role: Product, UI/UX, Frontend, Backend, QA, Security, DevOps, AI, and Docs as applicable.
+- For UI/UX work, require a page inventory first. Multi-page images are allowed only for style exploration; formal development needs one dedicated UI mockup per key page, and complex pages need state mockups for empty, loading, error, unauthorized, and key modal states.
 - User-facing status updates should be concise executive summaries: current stage, progress, completed work, active work, risks/blockers, user decisions needed, and next step.
 - When standards gaps are discovered in a downstream project, record local patches and upstream proposals. Local patches may take effect immediately in that project; upstream changes must be submitted as reviewable proposals and never auto-merged.
 - If the kit is provided as a folder or zip, read `STANDARDS_UPSTREAM_CONFIG.json` or `standards-upstream.example.json` to find the upstream Git remote before preparing a proposal.

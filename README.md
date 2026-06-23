@@ -71,13 +71,23 @@ standards init
 standards init --skip-rtk
 standards init --skip-agency-agents
 standards init --force
+standards init --skip-local-config
 standards check
 standards guard
 standards update-check
 standards setup-agency-agents
+standards setup-local-config
 ```
 
 `init` 会复制规范文档、AI 强制执行入口、状态看板、工作流模板和上游配置，安装 Codex skill，尝试安装 Codex 版 `agency-agents`，并尝试初始化 RTK。默认不会覆盖已存在文件，除非传入 `--force`。
+
+初始化时还会检查是否存在需要本地密钥的可选工具，例如 gstack UI 设计稿/生图工具。用户可以选择配置或跳过。真实 API Key 只会写入用户主目录，例如：
+
+```text
+~/.gstack/openai.json
+```
+
+该文件不能提交到业务项目、不能发布到 npm、不能上传 GitHub 或 Gitee。仓库只保存原始规范、模板和示例配置，不保存任何人的真实 key。
 
 初始化后会生成：
 
@@ -89,6 +99,7 @@ docs/process/TECH_DECISION.md
 docs/process/PERFORMANCE_BASELINE.md
 docs/process/ACCEPTANCE_GATES.md
 docs/process/OBSERVABILITY_BASELINE.md
+docs/process/LOCAL_TOOL_CONFIG.md
 docs/agents/AGENT_ROUTER.md
 CLAUDE.md
 GEMINI.md
@@ -111,12 +122,29 @@ standards guard
 standards update-check
 ```
 
+检查并配置本机可选工具密钥：
+
+```bash
+standards setup-local-config
+```
+
+如使用 gstack/GRSAI 生图能力，可在提示中选择：
+
+```text
+GRSAI 国内地址：https://grsai.dakka.com.cn
+GRSAI 海外地址：https://grsaiapi.com
+OpenAI 官方兼容配置：https://api.openai.com
+```
+
+如果是 AI 自动安装，AI 必须先询问用户是否配置；用户跳过时不能阻塞项目初始化。
+
 也可以不安装，直接使用 npx：
 
 ```bash
 npx ai-development-standards-kit init
 npx ai-development-standards-kit guard
 npx ai-development-standards-kit update-check
+npx ai-development-standards-kit setup-local-config
 ```
 
 ### 3. 作为新项目规范模板
@@ -140,6 +168,7 @@ docs/process/ACCEPTANCE_GATES.md
 docs/process/OBSERVABILITY_BASELINE.md
 docs/process/QA_STRATEGY.md
 docs/process/STANDARDS_EVOLUTION.md
+docs/process/LOCAL_TOOL_CONFIG.md
 docs/workflows/WORKFLOW_TEMPLATE.md
 standards-upstream.example.json
 docs/security/SECURITY_BASELINE.md
@@ -272,6 +301,7 @@ docs/diagrams/project-workflow.drawio
 - 不跳过需求、架构、测试、安全和发布门禁。
 - 不把 AI 输出直接写入用户最终内容，必须可审阅、可回滚、可追踪。
 - 不提交密钥、真实用户数据、本地配置、临时截图和构建产物。
+- 不把本机工具配置、供应商 API Key、`~/.gstack/openai.json`、`.env`、`openai.json`、`.gstack/` 或 `*.secret.json` 上传到 npm、GitHub、Gitee、PR、issue、日志和截图中。
 - 不让规范停留在文档，必须进入模板、CI、Review、检查清单和自动扫描。
 - 下游项目可以自动记录并执行本地规范补丁；上游规范只能自动提案，必须由维护者审核后合并。
 - 即使规范以压缩包或文件夹形式分发，也必须通过 `standards-upstream.example.json` 或 `STANDARDS_UPSTREAM_CONFIG.json` 记录上游 Git 地址，便于 AI 提交候选优化。

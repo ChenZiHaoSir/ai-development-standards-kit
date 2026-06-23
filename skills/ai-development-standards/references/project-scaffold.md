@@ -46,7 +46,7 @@ Minimum new-project checklist:
 - Generated documents and progress reports use Simplified Chinese by default unless the user explicitly asks otherwise.
 - Ambiguous tasks have enough context captured before execution: goal, audience, scope, inputs, constraints, output format, and success criteria.
 - Product main path and MVP non-goals are written.
-- Specialist deliverables exist or are explicitly marked not applicable: PRD, UI/UX spec, frontend spec, API spec, data model, QA plan, security, release runbook.
+- Specialist deliverables exist or are explicitly marked not applicable: PRD, UI/UX spec, per-key-page UI mockups, frontend spec, API spec, data model, QA plan, security, release runbook.
 - Framework and directory conventions are selected.
 - Architecture boundaries and data flow are documented.
 - Unified commands exist for lint, typecheck, test, smoke when applicable, and build.

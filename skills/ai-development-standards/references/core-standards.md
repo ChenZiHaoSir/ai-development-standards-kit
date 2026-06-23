@@ -55,6 +55,7 @@ Rules:
 - Server-side authorization is mandatory; frontend hiding is not authorization.
 - Logs must be structured, minimal, and redacted.
 - Dangerous operations need confirmation, audit, undo, rollback, or compensating action.
+- API keys, tokens, local tool config, vendor credentials, and cloud credentials must stay in the user's home directory, system secret store, or explicitly ignored local paths. They must never be copied into the repository, npm package, PR, issue, log, screenshot, GitHub, or Gitee.
 
 ## AI Features
 
@@ -67,3 +68,28 @@ Rules:
 ## Completion Definition
 
 A feature is done only when acceptance criteria pass, key risks are tested or explicitly verified, security and privacy are preserved, performance impact is understood, docs are updated, and the workspace contains no unrelated or unsafe changes.
+
+## HTTP Request Layer
+
+All HTTP/network calls must go through a centralized client. No raw fetch/axios in components or business logic.
+
+### Frontend
+
+- **Simple / static site**: use native `fetch` with a thin wrapper.
+- **Complex application**: use axios as the unified HTTP client.
+- **Centralized interceptors**:
+  - Request: inject auth token, attach request ID for tracing.
+  - Response: normalize error shapes, extract business error codes, handle 401 redirect / refresh token.
+- **Unified error handling**: HTTP status codes map to typed business error codes. Never expose raw HTTP errors to the user without a translation layer.
+- **Retry**: exponential backoff for retryable errors (5xx, network timeout). Never retry POST/PUT without idempotency guarantees.
+- **Timeout**: per-request type — fast queries ≤ 5s, slow operations ≤ 30s, file upload ≤ 120s.
+- **Cancellation**: support AbortController / CancelToken for page navigation, tab close, or user cancel.
+- **Loading state**: managed by the hook/store/wrapper that calls the HTTP layer, not inside the HTTP layer itself.
+- **Mock / dev**: use a centralized mock layer (msw, json-server, or a local mock config). Do not scatter mock logic across components.
+
+### Backend
+
+- Use axios, fetch (Node 18+), or a purpose-built HTTP client (e.g., `got` for Node, `httpx` for Python).
+- Centralize: retries, timeouts, circuit breaking, error mapping, and logging.
+- Wrap all external API calls in an adapter / proxy module. Business logic must not call HTTP directly.
+- Never expose third-party API keys, tokens, or raw error messages from upstream services in responses to clients.

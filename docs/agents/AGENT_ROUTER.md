@@ -17,11 +17,11 @@
 | --- | --- | --- | --- |
 | Intake | Product / PM, UX Researcher | Trend Researcher | 目标、用户、范围、非目标、疑问清单 |
 | Product | Product Manager, Project Manager Senior | Sprint Prioritizer | PRD、MVP、用户故事、验收标准 |
-| UX/UI | UI Designer, UX Architect | Brand Guardian, Accessibility Auditor | 页面清单、流程、状态、组件、设计约束 |
+| UX/UI | UI Designer, UX Architect, Image Generator | Brand Guardian, Accessibility Auditor | 页面清单、流程、状态、组件、设计约束、UI 设计稿（imagegen）、UI 资源（imagegen） |
 | Architecture | Software Architect, Backend Architect, Security Architect | Database Optimizer, SRE, Performance Benchmarker | 架构、模块边界、数据流、技术选型 ADR、交付形态决策、性能预算 |
 | Contract | Backend Architect, Frontend Developer | API Tester, Technical Writer | API、字段、错误码、权限、数据模型、mock |
 | Scaffold | DevOps Automator, Frontend Developer 或 Backend Architect | SRE | 官方脚手架命令、依赖选择、目录结构 |
-| Build Frontend | Frontend Developer | UI Designer, Accessibility Auditor | 页面、组件、状态、接口接入、前端验证 |
+| Build Frontend | Frontend Developer | UI Designer, Accessibility Auditor, Image Generator | 页面、组件、状态、接口接入、前端验证、图片资源生成 |
 | Build Backend | Backend Architect, Senior Developer | Database Optimizer, Security Architect | API、service、repository、迁移、后端验证 |
 | Build AI | AI Engineer, Prompt Engineer | Security Architect | Prompt、schema、限流、熔断、审计 |
 | Integration | API Tester, Frontend Developer, Backend Architect | QA / Testing | 联调记录、契约修正、回归验证 |
@@ -47,6 +47,7 @@
 | 发布部署 | DevOps Automator / SRE | 未写发布计划、回滚和监控就交付 |
 | 监控埋点 | SRE / Analytics Reporter / Backend Architect | 上线后才补错误日志、核心埋点和告警 |
 | 文档说明 | Technical Writer / Docs | 代码改了但文档不同步 |
+| 图片资源 | Image Generator | 禁止手搓占位符或外部下载，必须调用 imagegen 技能生成；UI 设计稿、图标、插画、空状态、品牌素材均需通过 imagegen 完成。|
 
 ## 派发模板
 

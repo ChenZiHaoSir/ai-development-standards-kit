@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 const { spawnSync } = require("child_process");
+const readline = require("readline");
 
 const packageRoot = path.resolve(__dirname, "..");
 const cwd = process.cwd();
@@ -147,6 +148,171 @@ function checkForUpdate() {
   log("当前已经是最新版本。");
 }
 
+function maskSecret(value) {
+  if (!value) return "";
+  if (value.length <= 8) return "****";
+  return `${value.slice(0, 4)}****${value.slice(-4)}`;
+}
+
+function getLocalToolConfigs() {
+  const home = os.homedir();
+  const designBinaryCandidates = [
+    path.join(home, ".Codex", "skills", "gstack", "design", "dist", "design"),
+    path.join(home, ".codex", "skills", "gstack", "design", "dist", "design"),
+    path.join(home, ".agents", "skills", "gstack", "design", "dist", "design")
+  ];
+
+  return [
+    {
+      id: "gstack-design-image",
+      name: "gstack UI 设计稿/生图工具",
+      detected: designBinaryCandidates.some(exists),
+      configPath: path.join(home, ".gstack", "openai.json"),
+      description: "用于 UI 设计稿、生图、视觉探索等能力。可配置 GRSAI 或 OpenAI API Key。",
+      candidates: designBinaryCandidates
+    }
+  ];
+}
+
+function writeJsonSecret(filePath, data) {
+  ensureDir(path.dirname(filePath));
+  fs.writeFileSync(filePath, `${JSON.stringify(data, null, 2)}\n`, { mode: 0o600 });
+  try {
+    fs.chmodSync(filePath, 0o600);
+  } catch (error) {
+    log(`WARN 无法设置本地配置权限为 0600：${error.message}`);
+  }
+}
+
+function createPrompt() {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  return {
+    async ask(question) {
+      return new Promise((resolve) => {
+        rl.question(question, (answer) => resolve(answer.trim()));
+      });
+    },
+    close() {
+      rl.close();
+    }
+  };
+}
+
+async function configureGstackDesign(tool) {
+  const prompt = createPrompt();
+
+  try {
+    log("");
+    log(`检测到可选配置项：${tool.name}`);
+    log(tool.description);
+    log(`本地配置路径：${tool.configPath}`);
+    log("配置文件只会写入用户主目录，不会写入当前项目、npm 包、GitHub 或 Gitee。");
+    log("注意：当前终端输入的 API Key 可能可见，请确认周围环境安全。");
+
+    const shouldConfigure = await prompt.ask("是否现在配置？[y/N] ");
+    if (!/^y(es)?$/i.test(shouldConfigure)) {
+      log("已跳过本地工具配置。后续可运行：standards setup-local-config");
+      return false;
+    }
+
+    log("");
+    log("请选择生图服务商：");
+    log("1. GRSAI 国内地址（推荐国内网络）：https://grsai.dakka.com.cn");
+    log("2. GRSAI 海外地址：https://grsaiapi.com");
+    log("3. OpenAI 官方兼容配置");
+    log("4. 跳过");
+    const providerChoice = await prompt.ask("请输入 1/2/3/4 [1]：");
+
+    if (providerChoice === "4") {
+      log("已跳过本地工具配置。");
+      return false;
+    }
+
+    const choice = providerChoice || "1";
+    let config;
+    if (choice === "2") {
+      config = {
+        provider: "grsai",
+        base_url: "https://grsaiapi.com",
+        model: "gpt-image-2"
+      };
+    } else if (choice === "3") {
+      config = {
+        provider: "openai",
+        base_url: "https://api.openai.com",
+        model: "gpt-image-1"
+      };
+    } else {
+      config = {
+        provider: "grsai",
+        base_url: "https://grsai.dakka.com.cn",
+        model: "gpt-image-2"
+      };
+    }
+
+    const apiKey = await prompt.ask("请输入 API Key（不会保存到项目仓库）：");
+    if (!apiKey) {
+      log("未输入 API Key，已跳过写入配置。");
+      return false;
+    }
+
+    writeJsonSecret(tool.configPath, {
+      ...config,
+      api_key: apiKey
+    });
+
+    log(`本地配置已写入：${tool.configPath}`);
+    log(`已保存 Key：${maskSecret(apiKey)}`);
+    return true;
+  } finally {
+    prompt.close();
+  }
+}
+
+async function setupLocalConfig(options = {}) {
+  const tools = getLocalToolConfigs();
+
+  log("== 本地可选工具配置检查 ==");
+  log("本步骤只处理本机密钥和本地工具配置，不会把密钥写入项目目录。");
+
+  for (const tool of tools) {
+    const configExists = exists(tool.configPath);
+    const status = configExists ? "已配置" : tool.detected ? "检测到工具，未配置" : "未检测到工具";
+    log(`${tool.name}：${status}`);
+    if (!tool.detected && !configExists && options.verbose) {
+      log(`  检测路径：${tool.candidates.join("、")}`);
+    }
+  }
+
+  const configurableTools = tools.filter((tool) => tool.detected || exists(tool.configPath) || options.force);
+  if (configurableTools.length === 0) {
+    log("");
+    log("当前未检测到需要配置密钥的可选工具。后续安装生图、部署、云服务等工具后，可运行：standards setup-local-config");
+    return;
+  }
+
+  if (!process.stdin.isTTY || !process.stdout.isTTY) {
+    log("");
+    log("当前不是交互式终端，已跳过密钥输入。需要配置时请手动运行：standards setup-local-config");
+    return;
+  }
+
+  for (const tool of configurableTools) {
+    if (exists(tool.configPath) && !options.force) {
+      log(`${tool.name} 已存在本地配置。如需重新配置，请运行：standards setup-local-config`);
+      continue;
+    }
+
+    if (tool.id === "gstack-design-image") {
+      await configureGstackDesign(tool);
+    }
+  }
+}
+
 function installSkill() {
   const sourceDir = path.join(packageRoot, "skills", "ai-development-standards");
   const targetDir = path.join(process.env.CODEX_HOME || path.join(os.homedir(), ".codex"), "skills", "ai-development-standards");
@@ -260,7 +426,7 @@ function setupAgencyAgents(options = {}) {
   return true;
 }
 
-function initProject(options = {}) {
+async function initProject(options = {}) {
   log("== AI 开发规范初始化 ==");
   log(`目标目录：${cwd}`);
 
@@ -300,6 +466,12 @@ function initProject(options = {}) {
     setupRtk();
   }
 
+  if (options.skipLocalConfig) {
+    log("已跳过本地可选工具配置。");
+  } else {
+    await setupLocalConfig();
+  }
+
   log("");
   log("初始化完成。");
   log("已生成 AI 强制执行入口。后续 AI 必须先读取 AGENTS.md 和 docs/process/AI_ENFORCEMENT.md 再执行任务。");
@@ -322,6 +494,7 @@ function checkKit() {
     "docs/process/PERFORMANCE_BASELINE.md",
     "docs/process/ACCEPTANCE_GATES.md",
     "docs/process/OBSERVABILITY_BASELINE.md",
+    "docs/process/LOCAL_TOOL_CONFIG.md",
     "docs/release/RELEASE_PLAN.md",
     "docs/agents/AGENT_ORCHESTRATION.md",
     "docs/agents/AGENT_ROUTER.md",
@@ -412,10 +585,11 @@ function guardProject() {
 
 function usage() {
   log(`用法：
-  npx ai-development-standards-kit init [--force] [--skip-rtk] [--skip-agency-agents]
+  npx ai-development-standards-kit init [--force] [--skip-rtk] [--skip-agency-agents] [--skip-local-config]
   npx ai-development-standards-kit install-skill
   npx ai-development-standards-kit setup-agency-agents
   npx ai-development-standards-kit setup-rtk
+  npx ai-development-standards-kit setup-local-config
   npx ai-development-standards-kit check
   npx ai-development-standards-kit guard
   npx ai-development-standards-kit update-check
@@ -426,57 +600,71 @@ function usage() {
   install-skill 安装 Codex skill 到 ~/.codex/skills
   setup-agency-agents 安装 agency-agents 到 ~/.codex/agents
   setup-rtk     初始化 RTK 上下文压缩工具
+  setup-local-config 检查并配置本机可选工具密钥，例如 gstack/GRSAI 生图配置
   check         检查 npm 包内规范文件是否完整
   guard         检查当前项目是否具备 AI 强制执行规范入口
   update-check  检查 npm 是否有新版本可升级
   --force       覆盖已存在的规范文件
   --skip-rtk    初始化时跳过 RTK
   --skip-agency-agents 初始化时跳过 agency-agents
+  --skip-local-config 初始化时跳过本地可选工具配置
 `);
 }
 
-const args = process.argv.slice(2);
-const command = args[0] || "help";
-const options = {
-  force: args.includes("--force"),
-  skipRtk: args.includes("--skip-rtk"),
-  skipAgencyAgents: args.includes("--skip-agency-agents")
-};
+async function main() {
+  const args = process.argv.slice(2);
+  const command = args[0] || "help";
+  const options = {
+    force: args.includes("--force"),
+    skipRtk: args.includes("--skip-rtk"),
+    skipAgencyAgents: args.includes("--skip-agency-agents"),
+    skipLocalConfig: args.includes("--skip-local-config"),
+    verbose: args.includes("--verbose")
+  };
 
-switch (command) {
-  case "init":
-    initProject(options);
-    break;
-  case "install-skill":
-    installSkill();
-    break;
-  case "setup-agency-agents":
-    setupAgencyAgents();
-    break;
-  case "setup-rtk":
-    setupRtk();
-    break;
-  case "check":
-    checkKit();
-    break;
-  case "guard":
-    guardProject();
-    break;
-  case "update-check":
-  case "upgrade-check":
-    checkForUpdate();
-    break;
-  case "version": {
-    const pkg = readPackage();
-    log(pkg.version);
-    break;
+  switch (command) {
+    case "init":
+      await initProject(options);
+      break;
+    case "install-skill":
+      installSkill();
+      break;
+    case "setup-agency-agents":
+      setupAgencyAgents();
+      break;
+    case "setup-rtk":
+      setupRtk();
+      break;
+    case "setup-local-config":
+      await setupLocalConfig({ force: true, verbose: options.verbose });
+      break;
+    case "check":
+      checkKit();
+      break;
+    case "guard":
+      guardProject();
+      break;
+    case "update-check":
+    case "upgrade-check":
+      checkForUpdate();
+      break;
+    case "version": {
+      const pkg = readPackage();
+      log(pkg.version);
+      break;
+    }
+    case "help":
+    case "--help":
+    case "-h":
+      usage();
+      break;
+    default:
+      usage();
+      fail(`未知命令：${command}`);
   }
-  case "help":
-  case "--help":
-  case "-h":
-    usage();
-    break;
-  default:
-    usage();
-    fail(`未知命令：${command}`);
 }
+
+main().catch((error) => {
+  console.error(error && error.message ? error.message : error);
+  process.exit(1);
+});

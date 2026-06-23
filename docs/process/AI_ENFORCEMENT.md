@@ -17,10 +17,11 @@ AI 必须在开始任务前读取并遵守以下文件：
 9. `docs/process/OBSERVABILITY_BASELINE.md`
 10. `docs/process/QA_STRATEGY.md`
 11. `docs/process/LANGUAGE_POLICY.md`
-12. `docs/release/RELEASE_PLAN.md`
-13. `docs/agents/MAIN_SESSION_CONTROL.md`
-14. `docs/agents/AGENT_ROUTER.md`
-15. 当前任务相关的专业文档，例如 `docs/agents/`、`docs/security/`、`docs/release/`
+12. `docs/process/LOCAL_TOOL_CONFIG.md`
+13. `docs/release/RELEASE_PLAN.md`
+14. `docs/agents/MAIN_SESSION_CONTROL.md`
+15. `docs/agents/AGENT_ROUTER.md`
+16. 当前任务相关的专业文档，例如 `docs/agents/`、`docs/security/`、`docs/release/`
 
 未读取这些文件时，不得直接开始写代码。
 
@@ -56,11 +57,16 @@ AI 开始执行前必须先给出简短执行声明：
 - 不得默认选择全栈一体开发。必须先比较全栈一体、前后端分离、静态站、API 服务等交付形态，并说明为什么选择当前形态。
 - 涉及核心路径、列表、图表、文件、AI、数据库、SSR、全栈 API 或用户交互反馈时，必须按 `docs/process/PERFORMANCE_BASELINE.md` 设定性能预算并验证。
 - 原型评审、交互设计评审、概要设计评审、排期评审、测试用例评审、提测、产品二次验收和预发布体验必须按 `docs/process/ACCEPTANCE_GATES.md` 记录结论。
+- UI 设计正式交付时，必须先输出页面清单；风格探索可以一张图包含多个页面缩略预览，但正式开发必须每个关键页面一张独立 UI 设计稿，复杂页面必须补充空、加载、错误、无权限和关键弹窗等状态稿。
 - 发布前必须按 `docs/release/RELEASE_PLAN.md` 明确灰度/全量策略、回滚条件、发布后观察指标和负责人。
 - 上线能力必须按 `docs/process/OBSERVABILITY_BASELINE.md` 明确错误日志、性能监控、核心埋点、告警和数据脱敏规则。
 - 不得绕过既有架构边界，把 UI、业务逻辑、数据库、外部 SDK、AI 模型调用混在同一层。
+- 功能性函数必须添加注释，说明函数用途、输入输出和业务含义，禁止产生无法理解的"魔法函数"。
+- 项目开发过程中缺少图片资源时，必须调用 imagegen 技能生成，禁止手搓占位符或外部下载。UI/UX 阶段的设计稿、图标、插画等均需调用 imagegen。
 - 不得跳过错误处理、加载态、空状态、权限校验、输入校验、日志脱敏和回滚路径。
 - 不得提交密钥、token、真实用户数据、本地绝对路径、临时文件和构建产物。
+- 需要配置生图、AI、云服务、部署、监控等外部工具时，必须先提示用户；真实密钥只能保存到用户主目录、本机密钥管理器或明确被忽略的本地路径，不得写入项目文件、npm 包、GitHub、Gitee、PR、issue、日志和截图。
+- 提交或发布前必须检查 `.env`、`openai.json`、`.gstack/`、`*.secret.json`、本地绝对路径和真实 token 未进入 diff。
 
 ## 交付前必须执行
 

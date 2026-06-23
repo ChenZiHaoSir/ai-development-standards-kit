@@ -1,2 +1,16 @@
 .DS_Store
 
+# Local-only tool config and secrets
+.env
+.env.*
+!.env.example
+*.local
+*.secret.json
+openai.json
+.gstack/
+local-config/
+
+# Local generated artifacts
+.playwright-cli/
+node_modules/
+*.tgz
