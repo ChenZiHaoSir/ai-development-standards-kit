@@ -9,612 +9,571 @@ const readline = require("readline");
 const packageRoot = path.resolve(__dirname, "..");
 const cwd = process.cwd();
 
-function log(message) {
-  console.log(message);
+// ─────────────────────────────────────────────
+// 通用工具
+// ─────────────────────────────────────────────
+
+function log(msg) {
+  console.log(msg);
 }
 
-function fail(message, code = 1) {
-  console.error(message);
+function fail(msg, code = 1) {
+  console.error(msg);
   process.exit(code);
 }
 
-function exists(filePath) {
-  return fs.existsSync(filePath);
-}
+function exists(f) { return fs.existsSync(f); }
 
-function ensureDir(dirPath) {
-  fs.mkdirSync(dirPath, { recursive: true });
-}
+function ensureDir(d) { fs.mkdirSync(d, { recursive: true }); }
 
-function copyFileIfMissing(source, target, options = {}) {
-  if (exists(target) && !options.force) {
-    log(`跳过已存在文件：${path.relative(cwd, target)}`);
+function copyFileIfMissing(src, tgt, opts = {}) {
+  if (exists(tgt) && !opts.force) {
+    log(`  跳过（已存在）：${path.relative(cwd, tgt)}`);
     return false;
   }
-
-  ensureDir(path.dirname(target));
-  fs.copyFileSync(source, target);
-  log(`${exists(target) && options.force ? "覆盖" : "创建"}：${path.relative(cwd, target)}`);
+  ensureDir(path.dirname(tgt));
+  fs.copyFileSync(src, tgt);
+  log(`  ${exists(tgt) && opts.force ? "覆盖" : "创建"}：${path.relative(cwd, tgt)}`);
   return true;
 }
 
-function copyDirIfMissing(sourceDir, targetDir, options = {}) {
-  if (!exists(sourceDir)) return;
-
-  for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
-    const source = path.join(sourceDir, entry.name);
-    const target = path.join(targetDir, entry.name);
-
+function copyDirIfMissing(srcDir, tgtDir, opts = {}) {
+  if (!exists(srcDir)) return;
+  for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
+    const src = path.join(srcDir, entry.name);
+    const tgt = path.join(tgtDir, entry.name);
     if (entry.isDirectory()) {
-      copyDirIfMissing(source, target, options);
-    } else if (entry.isFile()) {
-      copyFileIfMissing(source, target, options);
+      copyDirIfMissing(src, tgt, opts);
+    } else {
+      copyFileIfMissing(src, tgt, opts);
     }
   }
 }
 
-function writeFileIfMissing(target, content, options = {}) {
-  if (exists(target) && !options.force) {
-    log(`跳过已存在文件：${path.relative(cwd, target)}`);
+function writeFileIfMissing(tgt, content, opts = {}) {
+  if (exists(tgt) && !opts.force) {
+    log(`  跳过（已存在）：${path.relative(cwd, tgt)}`);
     return false;
   }
-
-  ensureDir(path.dirname(target));
-  fs.writeFileSync(target, content);
-  log(`${exists(target) && options.force ? "覆盖" : "创建"}：${path.relative(cwd, target)}`);
+  ensureDir(path.dirname(tgt));
+  fs.writeFileSync(tgt, content);
+  log(`  ${exists(tgt) && opts.force ? "覆盖" : "创建"}：${path.relative(cwd, tgt)}`);
   return true;
 }
 
-function readTemplate(relativePath) {
-  return fs.readFileSync(path.join(packageRoot, relativePath), "utf8");
+function readTemplate(relPath) {
+  return fs.readFileSync(path.join(packageRoot, relPath), "utf8");
 }
 
-function run(command, args, options = {}) {
-  const result = spawnSync(command, args, {
-    cwd: options.cwd || cwd,
-    env: options.env || process.env,
-    stdio: options.stdio || "inherit",
+function run(cmd, args, opts = {}) {
+  const result = spawnSync(cmd, args, {
+    cwd: opts.cwd || cwd,
+    env: opts.env || process.env,
+    stdio: opts.stdio || "inherit",
     shell: false
   });
-
   return result.status === 0;
 }
 
-function commandExists(command) {
-  const result = spawnSync("sh", ["-lc", `command -v ${command}`], {
-    stdio: "ignore"
-  });
-  return result.status === 0;
+function commandExists(cmd) {
+  const r = spawnSync("sh", ["-lc", `command -v ${cmd}`], { stdio: "ignore" });
+  return r.status === 0;
 }
 
 function readPackage() {
   return JSON.parse(fs.readFileSync(path.join(packageRoot, "package.json"), "utf8"));
 }
 
+function maskSecret(v) {
+  if (!v || v.length <= 8) return "****";
+  return `${v.slice(0, 4)}****${v.slice(-4)}`;
+}
+
+// ─────────────────────────────────────────────
+// 版本检查
+// ─────────────────────────────────────────────
+
 function compareVersions(left, right) {
-  const normalize = (value) => String(value).replace(/^[^\d]*/, "").split(/[.-]/).map((part) => {
-    const parsed = Number.parseInt(part, 10);
-    return Number.isNaN(parsed) ? 0 : parsed;
+  const norm = (s) => String(s).replace(/^[^\d]*/, "").split(/[.-]/).map((p) => {
+    const n = Number.parseInt(p, 10);
+    return Number.isNaN(n) ? 0 : n;
   });
-  const a = normalize(left);
-  const b = normalize(right);
-  const length = Math.max(a.length, b.length);
-
-  for (let index = 0; index < length; index += 1) {
-    const current = a[index] || 0;
-    const next = b[index] || 0;
-    if (current > next) return 1;
-    if (current < next) return -1;
+  const a = norm(left), b = norm(right);
+  const len = Math.max(a.length, b.length);
+  for (let i = 0; i < len; i++) {
+    if ((a[i] || 0) > (b[i] || 0)) return 1;
+    if ((a[i] || 0) < (b[i] || 0)) return -1;
   }
-
   return 0;
 }
 
 function checkForUpdate() {
   const pkg = readPackage();
-  const result = spawnSync("npm", ["view", pkg.name, "version", "--json"], {
-    cwd,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-    shell: false
+  const r = spawnSync("npm", ["view", pkg.name, "version", "--json"], {
+    cwd, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], shell: false
   });
-
-  if (result.status !== 0) {
-    console.error("无法查询 npm 最新版本。请检查网络、npm registry 或登录状态。");
-    if (result.stderr) console.error(result.stderr.trim());
+  if (r.status !== 0) {
+    console.error("无法查询 npm 最新版本，请检查网络和 npm registry 配置。");
     process.exit(1);
   }
-
-  const latest = result.stdout.trim().replace(/^"|"$/g, "");
-  const comparison = compareVersions(pkg.version, latest);
-
+  const latest = r.stdout.trim().replace(/^"|"$/g, "");
+  const cmp = compareVersions(pkg.version, latest);
   log(`当前版本：${pkg.version}`);
   log(`最新版本：${latest}`);
-
-  if (comparison < 0) {
+  if (cmp < 0) {
     log("");
-    log("发现新版本。建议升级：");
-    log(`npm install -g ${pkg.name}@latest`);
-    return;
-  }
-
-  if (comparison > 0) {
+    log("发现新版本，建议升级：");
+    log(`  npm install -g ${pkg.name}@latest`);
+  } else if (cmp > 0) {
     log("");
-    log("当前本地版本高于 npm latest，可能是本地开发版或预发布版本（非正式发布）。");
-    return;
+    log("当前本地版本高于 npm latest，可能为本地开发版。");
+  } else {
+    log("已是最新版本。");
   }
-
-  log("");
-  log("当前已经是最新版本。");
 }
 
-function maskSecret(value) {
-  if (!value) return "";
-  if (value.length <= 8) return "****";
-  return `${value.slice(0, 4)}****${value.slice(-4)}`;
-}
+// ─────────────────────────────────────────────
+// 本地工具配置
+// ─────────────────────────────────────────────
 
 function getLocalToolConfigs() {
   const home = os.homedir();
-  const designBinaryCandidates = [
+  const candidates = [
     path.join(home, ".Codex", "skills", "gstack", "design", "dist", "design"),
     path.join(home, ".codex", "skills", "gstack", "design", "dist", "design"),
     path.join(home, ".agents", "skills", "gstack", "design", "dist", "design")
   ];
-
-  return [
-    {
-      id: "gstack-design-image",
-      name: "gstack UI 设计稿/生图工具",
-      detected: designBinaryCandidates.some(exists),
-      configPath: path.join(home, ".gstack", "openai.json"),
-      description: "用于 UI 设计稿、生图、视觉探索等能力。可配置 GRSAI 或 OpenAI API Key。",
-      candidates: designBinaryCandidates
-    }
-  ];
+  return [{
+    id: "gstack-design-image",
+    name: "gstack UI 设计稿/生图工具",
+    detected: candidates.some(exists),
+    configPath: path.join(home, ".gstack", "openai.json"),
+    description: "用于 UI 设计稿、生图、视觉探索等。需配置 GRSAI 或 OpenAI API Key。",
+    candidates
+  }];
 }
 
 function writeJsonSecret(filePath, data) {
   ensureDir(path.dirname(filePath));
   fs.writeFileSync(filePath, `${JSON.stringify(data, null, 2)}\n`, { mode: 0o600 });
-  try {
-    fs.chmodSync(filePath, 0o600);
-  } catch (error) {
-    log(`WARN 无法设置本地配置权限为 0600：${error.message}`);
-  }
+  try { fs.chmodSync(filePath, 0o600); } catch (_) {}
 }
 
 function createPrompt() {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   return {
-    async ask(question) {
-      return new Promise((resolve) => {
-        rl.question(question, (answer) => resolve(answer.trim()));
-      });
-    },
-    close() {
-      rl.close();
-    }
+    async ask(q) { return new Promise((res) => rl.question(q, (a) => res(a.trim()))); },
+    close() { rl.close(); }
   };
 }
 
 async function configureGstackDesign(tool) {
   const prompt = createPrompt();
-
   try {
     log("");
-    log(`检测到可选配置项：${tool.name}`);
+    log(`检测到：${tool.name}`);
     log(tool.description);
-    log(`本地配置路径：${tool.configPath}`);
-    log("配置文件只会写入用户主目录，不会写入当前项目、npm 包、GitHub 或 Gitee。");
-    log("注意：当前终端输入的 API Key 可能可见，请确认周围环境安全。");
+    log(`配置文件将写入：${tool.configPath}`);
+    log("说明：此文件保存在用户主目录，不会进入项目仓库或 npm 包。");
 
-    const shouldConfigure = await prompt.ask("是否现在配置？[y/N] ");
-    if (!/^y(es)?$/i.test(shouldConfigure)) {
-      log("已跳过本地工具配置。后续可运行：standards setup-local-config");
+    const ans = await prompt.ask("是否现在配置 API Key？[y/N] ");
+    if (!/^y(es)?$/i.test(ans)) {
+      log("已跳过。后续可运行：npx ai-development-standards-kit setup-local-config");
       return false;
     }
 
     log("");
-    log("请选择生图服务商：");
-    log("1. GRSAI 国内地址（推荐国内网络）：https://grsai.dakka.com.cn");
-    log("2. GRSAI 海外地址：https://grsaiapi.com");
-    log("3. OpenAI 官方兼容配置");
-    log("4. 跳过");
-    const providerChoice = await prompt.ask("请输入 1/2/3/4 [1]：");
+    log("请选择服务商：");
+    log("  1. GRSAI 国内地址（推荐国内网络）https://grsai.dakka.com.cn");
+    log("  2. GRSAI 海外地址                      https://grsaiapi.com");
+    log("  3. OpenAI 官方兼容                     https://api.openai.com");
+    const choice = await prompt.ask("请输入 1/2/3 [1]：") || "1";
 
-    if (providerChoice === "4") {
-      log("已跳过本地工具配置。");
-      return false;
-    }
-
-    const choice = providerChoice || "1";
     let config;
     if (choice === "2") {
-      config = {
-        provider: "grsai",
-        base_url: "https://grsaiapi.com",
-        model: "gpt-image-2"
-      };
+      config = { provider: "grsai", base_url: "https://grsaiapi.com", model: "gpt-image-2" };
     } else if (choice === "3") {
-      config = {
-        provider: "openai",
-        base_url: "https://api.openai.com",
-        model: "gpt-image-1"
-      };
+      config = { provider: "openai", base_url: "https://api.openai.com", model: "gpt-image-1" };
     } else {
-      config = {
-        provider: "grsai",
-        base_url: "https://grsai.dakka.com.cn",
-        model: "gpt-image-2"
-      };
+      config = { provider: "grsai", base_url: "https://grsai.dakka.com.cn", model: "gpt-image-2" };
     }
 
-    const apiKey = await prompt.ask("请输入 API Key（不会保存到项目仓库）：");
+    log("");
+    const apiKey = await prompt.ask("请输入 API Key：");
     if (!apiKey) {
-      log("未输入 API Key，已跳过写入配置。");
+      log("未输入，已跳过。");
       return false;
     }
 
-    writeJsonSecret(tool.configPath, {
-      ...config,
-      api_key: apiKey
-    });
-
-    log(`本地配置已写入：${tool.configPath}`);
-    log(`已保存 Key：${maskSecret(apiKey)}`);
+    writeJsonSecret(tool.configPath, { ...config, api_key: apiKey });
+    log(`配置已保存。Key：${maskSecret(apiKey)}`);
     return true;
   } finally {
     prompt.close();
   }
 }
 
-async function setupLocalConfig(options = {}) {
+async function setupLocalConfig(opts = {}) {
   const tools = getLocalToolConfigs();
 
-  log("== 本地可选工具配置检查 ==");
-  log("本步骤只处理本机密钥和本地工具配置，不会把密钥写入项目目录。");
+  log("");
+  log("【步骤 5/5】检查本机可选工具密钥配置");
+  log("─────────────────────────────────────");
+  log("本步骤仅处理本机密钥，不会将任何密钥写入项目目录。");
 
   for (const tool of tools) {
-    const configExists = exists(tool.configPath);
-    const status = configExists ? "已配置" : tool.detected ? "检测到工具，未配置" : "未检测到工具";
-    log(`${tool.name}：${status}`);
-    if (!tool.detected && !configExists && options.verbose) {
-      log(`  检测路径：${tool.candidates.join("、")}`);
-    }
+    const hasConfig = exists(tool.configPath);
+    const status = hasConfig ? "✅ 已配置" : tool.detected ? "⚠️  已检测到工具，未配置" : "⭕  未检测到工具";
+    log(`  ${tool.name}：${status}`);
   }
 
-  const configurableTools = tools.filter((tool) => tool.detected || exists(tool.configPath) || options.force);
-  if (configurableTools.length === 0) {
+  const needConfig = tools.filter((t) => t.detected || exists(t.configPath) || opts.force);
+  if (needConfig.length === 0) {
     log("");
-    log("当前未检测到需要配置密钥的可选工具。后续安装生图、部署、云服务等工具后，可运行：standards setup-local-config");
+    log("未检测到需要配置密钥的工具。后续安装生图/部署/云服务后，可运行：");
+    log("  npx ai-development-standards-kit setup-local-config");
     return;
   }
 
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
     log("");
-    log("当前不是交互式终端，已跳过密钥输入。需要配置时请手动运行：standards setup-local-config");
+    log("当前非交互式终端，已跳过密钥输入。需配置时请运行：");
+    log("  npx ai-development-standards-kit setup-local-config");
     return;
   }
 
-  for (const tool of configurableTools) {
-    if (exists(tool.configPath) && !options.force) {
-      log(`${tool.name} 已存在本地配置。如需重新配置，请运行：standards setup-local-config`);
+  for (const tool of needConfig) {
+    if (exists(tool.configPath) && !opts.force) {
+      log(`${tool.name} 已有配置。如需重新配置请加 --force：`);
+      log(`  npx ai-development-standards-kit setup-local-config --force`);
       continue;
     }
-
     if (tool.id === "gstack-design-image") {
       await configureGstackDesign(tool);
     }
   }
 }
 
+// ─────────────────────────────────────────────
+// Skill 安装
+// ─────────────────────────────────────────────
+
 function installSkill() {
-  const sourceDir = path.join(packageRoot, "skills", "ai-development-standards");
-  const targetDir = path.join(process.env.CODEX_HOME || path.join(os.homedir(), ".codex"), "skills", "ai-development-standards");
-
-  if (!exists(path.join(sourceDir, "SKILL.md"))) {
-    fail(`缺少 skill 源文件：${sourceDir}`);
-  }
-
-  fs.rmSync(targetDir, { recursive: true, force: true });
-  ensureDir(path.dirname(targetDir));
-  fs.cpSync(sourceDir, targetDir, { recursive: true });
-  log(`已安装 ai-development-standards skill：${targetDir}`);
+  const src = path.join(packageRoot, "skills", "ai-development-standards");
+  const tgt = path.join(process.env.CODEX_HOME || path.join(os.homedir(), ".codex"), "skills", "ai-development-standards");
+  if (!exists(path.join(src, "SKILL.md"))) { fail(`缺少 skill 源文件：${src}`); }
+  fs.rmSync(tgt, { recursive: true, force: true });
+  ensureDir(path.dirname(tgt));
+  fs.cpSync(src, tgt, { recursive: true });
+  log(`  Codex skill 已安装：${tgt}`);
 }
 
+// ─────────────────────────────────────────────
+// RTK
+// ─────────────────────────────────────────────
+
 function setupRtk() {
+  log("");
+  log("【步骤 3/5】初始化 RTK 上下文压缩工具");
+  log("─────────────────────────────────────");
   if (!commandExists("rtk")) {
     if (commandExists("brew")) {
-      log("未检测到 RTK，使用 Homebrew 安装（macOS）：brew install rtk");
+      log("未检测到 RTK，正在通过 Homebrew 安装（macOS）...");
       if (!run("brew", ["install", "rtk"])) {
-        log("RTK 安装失败。后续请使用普通命令并控制输出长度。");
+        log("RTK 安装失败，将使用普通命令替代。");
         return;
       }
     } else {
-      log("未检测到 RTK，也未检测到 Homebrew（macOS 包管理器）。可手动安装：");
-      log("curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh");
+      log("未检测到 RTK，也未检测到 Homebrew（macOS 包管理器）。");
+      log("手动安装方式：");
+      log("  curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh");
       return;
     }
   }
-
-  log("初始化 RTK 项目说明。");
   run("rtk", ["init", "--codex"], { cwd });
-
-  const rtkSource = path.join(packageRoot, "RTK.md");
-  const rtkTarget = path.join(cwd, "RTK.md");
-  if (exists(rtkSource)) {
-    copyFileIfMissing(rtkSource, rtkTarget, { force: true });
-  }
+  const rtkSrc = path.join(packageRoot, "RTK.md");
+  const rtkTgt = path.join(cwd, "RTK.md");
+  if (exists(rtkSrc)) { copyFileIfMissing(rtkSrc, rtkTgt, { force: true }); }
 }
+
+// ─────────────────────────────────────────────
+// agency-agents
+// ─────────────────────────────────────────────
 
 function agencyAgentsCacheDir() {
   return path.join(os.homedir(), ".cache", "ai-development-standards-kit", "agency-agents");
 }
 
 function agencyAgentsInstallDir() {
-  return process.env.CODEX_AGENTS_DIR || path.join(process.env.CODEX_HOME || path.join(os.homedir(), ".codex"), "agents");
+  return process.env.CODEX_AGENTS_DIR ||
+    path.join(process.env.CODEX_HOME || path.join(os.homedir(), ".codex"), "agents");
 }
 
-function setupAgencyAgents(options = {}) {
+function setupAgencyAgents() {
+  log("");
+  log("【步骤 2/5】安装 agency-agents 专业智能体");
+  log("─────────────────────────────────────");
   const repoUrl = "https://github.com/msitarzewski/agency-agents.git";
   const cacheDir = agencyAgentsCacheDir();
   const codexAgentsDir = agencyAgentsInstallDir();
 
   if (!commandExists("git")) {
-    log("未检测到 git，无法自动安装 agency-agents。后续将仅使用本项目内置角色编排规范。");
-    return false;
+    log("未检测到 git，将跳过 agency-agents 安装（不影响规范使用）。");
+    return;
   }
 
   ensureDir(path.dirname(cacheDir));
-
   if (exists(path.join(cacheDir, ".git"))) {
-    log(`更新 agency-agents 缓存：${cacheDir}`);
+    log("更新 agency-agents 缓存中...");
     if (!run("git", ["pull", "--ff-only"], { cwd: cacheDir })) {
-      log("agency-agents 更新失败。将尝试使用现有缓存继续安装。");
+      log("更新失败，将使用现有缓存继续。");
     }
   } else {
-    if (exists(cacheDir)) {
-      fs.rmSync(cacheDir, { recursive: true, force: true });
-    }
-    log(`下载 agency-agents：${repoUrl}`);
+    if (exists(cacheDir)) fs.rmSync(cacheDir, { recursive: true, force: true });
+    log("下载 agency-agents...");
     if (!run("git", ["clone", "--depth", "1", repoUrl, cacheDir])) {
-      log("agency-agents 下载失败。后续将仅使用本项目内置角色编排规范。");
-      return false;
+      log("下载失败，将跳过（不影响规范使用）。");
+      return;
     }
   }
 
   const convertScript = path.join(cacheDir, "scripts", "convert.sh");
   const installScript = path.join(cacheDir, "scripts", "install.sh");
-
   if (!exists(convertScript) || !exists(installScript)) {
-    log("agency-agents 缓存缺少官方安装脚本。后续将仅使用本项目内置角色编排规范。");
-    return false;
+    log("agency-agents 缺少官方脚本，将跳过（不影响规范使用）。");
+    return;
   }
 
-  log("转换 agency-agents 为 Codex custom agent 格式。");
+  log("转换并安装到 Codex agents 目录...");
   if (!run("bash", [convertScript, "--tool", "codex"], { cwd: cacheDir })) {
-    log("agency-agents 转换失败。后续将仅使用本项目内置角色编排规范。");
-    return false;
+    log("转换失败，将跳过。");
+    return;
   }
 
   ensureDir(codexAgentsDir);
-  log(`安装 agency-agents 到 Codex agents 目录：${codexAgentsDir}`);
-  const installArgs = [installScript, "--tool", "codex", "--no-interactive"];
-  if (options.dryRun) installArgs.push("--dry-run");
-
-  if (!run("bash", installArgs, {
+  if (!run("bash", [installScript, "--tool", "codex", "--no-interactive"], {
     cwd: cacheDir,
-    env: {
-      ...process.env,
-      CODEX_AGENTS_DIR: codexAgentsDir
-    }
+    env: { ...process.env, CODEX_AGENTS_DIR: codexAgentsDir }
   })) {
-    log("agency-agents 安装失败。后续将仅使用本项目内置角色编排规范。");
-    return false;
+    log("安装失败，将跳过。");
+    return;
   }
 
   const count = exists(codexAgentsDir)
-    ? fs.readdirSync(codexAgentsDir).filter((file) => file.endsWith(".toml")).length
+    ? fs.readdirSync(codexAgentsDir).filter((f) => f.endsWith(".toml")).length
     : 0;
-
-  log(`agency-agents 安装完成。Codex agents 目录当前包含 ${count} 个 .toml agent 文件。`);
-  return true;
+  log(`安装完成，共 ${count} 个专业智能体。`);
 }
 
-async function initProject(options = {}) {
-  log("== AI 开发规范初始化 ==");
+// ─────────────────────────────────────────────
+// 项目初始化（主流程）
+// ─────────────────────────────────────────────
+
+async function initProject(opts = {}) {
+  console.log("");
+  console.log("╔══════════════════════════════════════════════╗");
+  console.log("║      AI 开发规范初始化  v" + readPackage().version.padEnd(27) + "║");
+  console.log("╚══════════════════════════════════════════════╝");
+  console.log("");
   log(`目标目录：${cwd}`);
+  console.log("");
 
-  copyFileIfMissing(path.join(packageRoot, "AGENTS.md"), path.join(cwd, "AGENTS.md"), options);
-  copyFileIfMissing(path.join(packageRoot, "standards-upstream.example.json"), path.join(cwd, "standards-upstream.example.json"), options);
+  // 步骤 1：复制规范文件
+  log("【步骤 1/5】复制开发规范文件");
+  log("─────────────────────────────────────");
+  copyFileIfMissing(path.join(packageRoot, "AGENTS.md"), path.join(cwd, "AGENTS.md"), opts);
+  copyFileIfMissing(path.join(packageRoot, "standards-upstream.example.json"), path.join(cwd, "standards-upstream.example.json"), opts);
 
-  copyDirIfMissing(path.join(packageRoot, "docs", "process"), path.join(cwd, "docs", "process"), options);
-  copyDirIfMissing(path.join(packageRoot, "docs", "agents"), path.join(cwd, "docs", "agents"), options);
-  copyDirIfMissing(path.join(packageRoot, "docs", "security"), path.join(cwd, "docs", "security"), options);
-  copyDirIfMissing(path.join(packageRoot, "docs", "release"), path.join(cwd, "docs", "release"), options);
-  copyDirIfMissing(path.join(packageRoot, "docs", "workflows"), path.join(cwd, "docs", "workflows"), options);
-  copyDirIfMissing(path.join(packageRoot, "templates"), path.join(cwd, "templates"), options);
+  copyDirIfMissing(path.join(packageRoot, "docs", "process"), path.join(cwd, "docs", "process"), opts);
+  copyDirIfMissing(path.join(packageRoot, "docs", "agents"), path.join(cwd, "docs", "agents"), opts);
+  copyDirIfMissing(path.join(packageRoot, "docs", "security"), path.join(cwd, "docs", "security"), opts);
+  copyDirIfMissing(path.join(packageRoot, "docs", "release"), path.join(cwd, "docs", "release"), opts);
+  copyDirIfMissing(path.join(packageRoot, "docs", "workflows"), path.join(cwd, "docs", "workflows"), opts);
+  copyDirIfMissing(path.join(packageRoot, "templates"), path.join(cwd, "templates"), opts);
 
   const aiRules = readTemplate("templates/AI_AGENT_RULES.md");
-  writeFileIfMissing(path.join(cwd, "CLAUDE.md"), aiRules, options);
-  writeFileIfMissing(path.join(cwd, "GEMINI.md"), aiRules, options);
-  writeFileIfMissing(path.join(cwd, ".cursor", "rules", "ai-development-standards.mdc"), aiRules, options);
-  writeFileIfMissing(path.join(cwd, ".github", "copilot-instructions.md"), aiRules, options);
+  writeFileIfMissing(path.join(cwd, "CLAUDE.md"), aiRules, opts);
+  writeFileIfMissing(path.join(cwd, "GEMINI.md"), aiRules, opts);
+  writeFileIfMissing(path.join(cwd, ".cursor", "rules", "ai-development-standards.mdc"), aiRules, opts);
+  writeFileIfMissing(path.join(cwd, ".github", "copilot-instructions.md"), aiRules, opts);
 
   const statusBoard = path.join(packageRoot, "docs", "agents", "PROJECT_STATUS_BOARD.md");
-  copyFileIfMissing(statusBoard, path.join(cwd, "PROJECT_PROGRESS.md"), options);
+  copyFileIfMissing(statusBoard, path.join(cwd, "PROJECT_PROGRESS.md"), opts);
 
   const upstreamConfig = path.join(packageRoot, "templates", "STANDARDS_UPSTREAM_CONFIG.json");
-  copyFileIfMissing(upstreamConfig, path.join(cwd, "docs", "process", "STANDARDS_UPSTREAM_CONFIG.json"), options);
+  copyFileIfMissing(upstreamConfig, path.join(cwd, "docs", "process", "STANDARDS_UPSTREAM_CONFIG.json"), opts);
 
+  // 步骤 2：agency-agents
+  if (opts.skipAgencyAgents) {
+    log("");
+    log("已跳过 agency-agents 安装（--skip-agency-agents）");
+  } else {
+    await setupAgencyAgents();
+  }
+
+  // 步骤 3：RTK
+  if (opts.skipRtk) {
+    log("");
+    log("已跳过 RTK 初始化（--skip-rtk）");
+  } else {
+    await setupRtk();
+  }
+
+  // 步骤 4：Skill
+  log("");
+  log("【步骤 4/5】安装 Codex AI 开发规范 Skill");
+  log("─────────────────────────────────────");
   installSkill();
 
-  if (options.skipAgencyAgents) {
-    log("已跳过 agency-agents 安装。");
-  } else {
-    setupAgencyAgents();
-  }
-
-  if (options.skipRtk) {
-    log("已跳过 RTK 初始化。");
-  } else {
-    setupRtk();
-  }
-
-  if (options.skipLocalConfig) {
-    log("已跳过本地可选工具配置。");
+  // 步骤 5：本地工具配置
+  if (opts.skipLocalConfig) {
+    log("");
+    log("已跳过本地工具配置（--skip-local-config）");
   } else {
     await setupLocalConfig();
   }
 
+  // 完成总结
+  console.log("");
+  console.log("╔══════════════════════════════════════════════╗");
+  console.log("║                   初始化完成                  ║");
+  console.log("╚══════════════════════════════════════════════╝");
+  console.log("");
+  log("✅ 规范文件已生成，AI 开工入口已配置");
+  log("✅ 状态看板 PROJECT_PROGRESS.md 已创建");
+  log("✅ Codex skill 已安装（~/.codex/skills）");
+  if (!opts.skipAgencyAgents) log("✅ agency-agents 专业智能体已安装");
+  if (!opts.skipRtk) log("✅ RTK 上下文压缩工具已配置");
   log("");
-  log("初始化完成。");
-  log("已生成 AI 强制执行入口。后续 AI 必须先读取 AGENTS.md 和 docs/process/AI_ENFORCEMENT.md 再执行任务。");
-  log("建议先运行：standards guard");
-  log("下一步：请描述你的项目需求、目标用户、核心功能、技术偏好和交付形式。");
-  log("后续除代码、命令、路径、API 字段、配置项和专有名词外，默认使用简体中文。");
+  log("─────────────────────────────────────────");
+  log("下一步操作：");
+  log("");
+  log("  1. 检查规范完整性（可选）：");
+  log("       npx ai-development-standards-kit guard");
+  log("");
+  log("  2. 检查版本更新（可选）：");
+  log("       npx ai-development-standards-kit update-check");
+  log("");
+  log("  3. 开始项目开发：直接向 AI 描述你的项目需求，");
+  log("     AI 会自动读取规范并严格按规范执行。");
+  log("");
+  log("  规范默认使用简体中文，除代码、命令、路径、");
+  log("  API 字段、配置项外均使用中文沟通。");
+  log("─────────────────────────────────────────");
 }
+
+// ─────────────────────────────────────────────
+// 检查命令
+// ─────────────────────────────────────────────
 
 function checkKit() {
   const required = [
-    "README.md",
-    "AGENTS.md",
-    "docs/AI_BOOTSTRAP.md",
-    "docs/process/LANGUAGE_POLICY.md",
-    "docs/process/AI_ENFORCEMENT.md",
-    "docs/process/AI_WORKFLOW_FACTORY.md",
-    "docs/process/ENGINEERING_WORKFLOW.md",
-    "docs/process/PROJECT_LIFECYCLE.md",
-    "docs/process/TECH_DECISION.md",
-    "docs/process/PERFORMANCE_BASELINE.md",
-    "docs/process/ACCEPTANCE_GATES.md",
-    "docs/process/OBSERVABILITY_BASELINE.md",
-    "docs/process/LOCAL_TOOL_CONFIG.md",
-    "docs/release/RELEASE_PLAN.md",
-    "docs/agents/AGENT_ORCHESTRATION.md",
-    "docs/agents/AGENT_ROUTER.md",
-    "docs/workflows/WORKFLOW_TEMPLATE.md",
+    "README.md", "AGENTS.md", "docs/AI_BOOTSTRAP.md",
+    "docs/process/LANGUAGE_POLICY.md", "docs/process/AI_ENFORCEMENT.md",
+    "docs/process/AI_WORKFLOW_FACTORY.md", "docs/process/ENGINEERING_WORKFLOW.md",
+    "docs/process/PROJECT_LIFECYCLE.md", "docs/process/TECH_DECISION.md",
+    "docs/process/PERFORMANCE_BASELINE.md", "docs/process/ACCEPTANCE_GATES.md",
+    "docs/process/OBSERVABILITY_BASELINE.md", "docs/process/LOCAL_TOOL_CONFIG.md",
+    "docs/release/RELEASE_PLAN.md", "docs/agents/AGENT_ORCHESTRATION.md",
+    "docs/agents/AGENT_ROUTER.md", "docs/workflows/WORKFLOW_TEMPLATE.md",
     "skills/ai-development-standards/SKILL.md",
-    "templates/AI_AGENT_RULES.md",
-    "templates/STANDARDS_UPSTREAM_CONFIG.json"
+    "templates/AI_AGENT_RULES.md", "templates/STANDARDS_UPSTREAM_CONFIG.json"
   ];
-
   let ok = true;
-  for (const relative of required) {
-    const filePath = path.join(packageRoot, relative);
-    if (exists(filePath)) {
-      log(`OK ${relative}`);
-    } else {
-      ok = false;
-      console.error(`MISSING ${relative}`);
-    }
+  for (const rel of required) {
+    const fp = path.join(packageRoot, rel);
+    if (exists(fp)) log(`✅ ${rel}`);
+    else { ok = false; console.error(`❌ ${rel}`); }
   }
-
   if (!ok) process.exit(1);
   log("规范包完整性检查通过。");
 }
 
 function guardProject() {
   const required = [
-    "AGENTS.md",
-    "docs/process/AI_ENFORCEMENT.md",
-    "docs/process/DEVELOPMENT_STANDARDS.md",
-    "docs/process/ENGINEERING_WORKFLOW.md",
-    "docs/process/PROJECT_LIFECYCLE.md",
-    "docs/process/MINIMAL_IMPLEMENTATION.md",
-    "docs/process/TECH_DECISION.md",
-    "docs/process/PERFORMANCE_BASELINE.md",
-    "docs/process/ACCEPTANCE_GATES.md",
-    "docs/process/OBSERVABILITY_BASELINE.md",
-    "docs/process/QA_STRATEGY.md",
-    "docs/process/LANGUAGE_POLICY.md",
-    "PROJECT_PROGRESS.md",
-    "CLAUDE.md",
-    "GEMINI.md",
-    ".cursor/rules/ai-development-standards.mdc",
-    ".github/copilot-instructions.md"
+    "AGENTS.md", "docs/process/AI_ENFORCEMENT.md", "docs/process/DEVELOPMENT_STANDARDS.md",
+    "docs/process/ENGINEERING_WORKFLOW.md", "docs/process/PROJECT_LIFECYCLE.md",
+    "docs/process/MINIMAL_IMPLEMENTATION.md", "docs/process/TECH_DECISION.md",
+    "docs/process/PERFORMANCE_BASELINE.md", "docs/process/ACCEPTANCE_GATES.md",
+    "docs/process/OBSERVABILITY_BASELINE.md", "docs/process/QA_STRATEGY.md",
+    "docs/process/LANGUAGE_POLICY.md", "PROJECT_PROGRESS.md",
+    "CLAUDE.md", "GEMINI.md",
+    ".cursor/rules/ai-development-standards.mdc", ".github/copilot-instructions.md"
   ];
-
   const recommended = [
-    "docs/security/SECURITY_BASELINE.md",
-    "docs/release/RELEASE_PLAN.md",
-    "docs/release/RELEASE_CHECKLIST.md",
-    "docs/agents/MAIN_SESSION_CONTROL.md",
-    "docs/agents/AGENT_ORCHESTRATION.md",
-    "docs/agents/AGENT_ROUTER.md",
-    "docs/agents/SPECIALIST_DELIVERABLES.md",
-    "docs/workflows/WORKFLOW_TEMPLATE.md",
+    "docs/security/SECURITY_BASELINE.md", "docs/release/RELEASE_PLAN.md",
+    "docs/release/RELEASE_CHECKLIST.md", "docs/agents/MAIN_SESSION_CONTROL.md",
+    "docs/agents/AGENT_ORCHESTRATION.md", "docs/agents/AGENT_ROUTER.md",
+    "docs/agents/SPECIALIST_DELIVERABLES.md", "docs/workflows/WORKFLOW_TEMPLATE.md",
     "docs/process/STANDARDS_UPSTREAM_CONFIG.json"
   ];
-
   let ok = true;
   log("== AI 开发规范强制约束检查 ==");
-
-  for (const relative of required) {
-    if (exists(path.join(cwd, relative))) {
-      log(`OK ${relative}`);
-    } else {
-      ok = false;
-      console.error(`MISSING ${relative}`);
-    }
+  for (const rel of required) {
+    if (exists(path.join(cwd, rel))) log(`✅ ${rel}`);
+    else { ok = false; console.error(`❌ ${rel}`); }
   }
-
-  for (const relative of recommended) {
-    if (exists(path.join(cwd, relative))) {
-      log(`OK ${relative}`);
-    } else {
-      console.error(`WARN ${relative}`);
-    }
+  for (const rel of recommended) {
+    if (exists(path.join(cwd, rel))) log(`⚠️  ${rel}（推荐）`);
+    else console.error(`⭕ ${rel}（推荐）`);
   }
-
   if (!ok) {
-    console.error("");
-    console.error("强制约束不完整。请运行：standards init");
-    console.error("如需覆盖旧规则，请运行：standards init --force");
+    log("");
+    log("强制约束不完整，请运行：");
+    log("  npx ai-development-standards-kit init");
+    log("如需覆盖旧规则，请运行：");
+    log("  npx ai-development-standards-kit init --force");
     process.exit(1);
   }
-
   log("");
-  log("强制约束检查通过。AI 应先读取 AGENTS.md 和 docs/process/AI_ENFORCEMENT.md，再开始任何任务。");
+  log("强制约束检查通过。AI 应先读取 AGENTS.md 和 docs/process/AI_ENFORCEMENT.md 再开始任务。");
 }
+
+// ─────────────────────────────────────────────
+// 帮助文本
+// ─────────────────────────────────────────────
 
 function usage() {
-  log(`用法：
-  npx ai-development-standards-kit init [--force] [--skip-rtk] [--skip-agency-agents] [--skip-local-config]
-  npx ai-development-standards-kit install-skill
-  npx ai-development-standards-kit setup-agency-agents
-  npx ai-development-standards-kit setup-rtk
-  npx ai-development-standards-kit setup-local-config
-  npx ai-development-standards-kit check
-  npx ai-development-standards-kit guard
-  npx ai-development-standards-kit update-check
-  npx ai-development-standards-kit version
-
-说明：
-  init          在当前项目目录生成中文 AI 开发规范、状态看板和工作流模板
-  install-skill 安装 Codex skill 到 ~/.codex/skills
-  setup-agency-agents 安装 agency-agents 到 ~/.codex/agents
-  setup-rtk     初始化 RTK 上下文压缩工具
-  setup-local-config 检查并配置本机可选工具密钥，例如 gstack/GRSAI 生图配置
-  check         检查 npm 包内规范文件是否完整
-  guard         检查当前项目是否具备 AI 强制执行规范入口
-  update-check  检查 npm 是否有新版本可升级
-  --force       覆盖已存在的规范文件
-  --skip-rtk    初始化时跳过 RTK
-  --skip-agency-agents 初始化时跳过 agency-agents
-  --skip-local-config 初始化时跳过本地可选工具配置
-`);
+  console.log("");
+  console.log("╔══════════════════════════════════════════════╗");
+  console.log("║       AI Development Standards Kit           ║");
+  console.log("║       AI 开发规范包 v" + readPackage().version.padEnd(27) + "║");
+  console.log("╚══════════════════════════════════════════════╝");
+  console.log("");
+  log("常用命令：");
+  log("");
+  log("  npx ai-development-standards-kit init");
+  log("    在当前项目初始化 AI 开发规范。首次使用必须运行。");
+  log("");
+  log("  npx ai-development-standards-kit guard");
+  log("    检查当前项目是否具备 AI 强制执行规范。");
+  log("");
+  log("  npx ai-development-standards-kit setup-local-config");
+  log("    配置本机可选工具密钥（如生图 API Key）。");
+  log("");
+  log("其他命令：");
+  log("");
+  log("  init --force                    强制覆盖已有规范文件");
+  log("  init --skip-rtk                 初始化时跳过 RTK");
+  log("  init --skip-agency-agents       初始化时跳过 agency-agents");
+  log("  init --skip-local-config        初始化时跳过密钥配置");
+  log("  install-skill                   仅安装 Codex skill");
+  log("  setup-agency-agents            仅安装 agency-agents");
+  log("  setup-rtk                      仅初始化 RTK");
+  log("  check                          检查 npm 包内规范文件完整性");
+  log("  update-check                   检查 npm 是否有新版本");
+  log("  version                        显示当前版本号");
+  log("");
 }
+
+// ─────────────────────────────────────────────
+// 主入口
+// ─────────────────────────────────────────────
 
 async function main() {
   const args = process.argv.slice(2);
-  const command = args[0] || "help";
-  const options = {
+  const cmd = args[0] || "help";
+  const opts = {
     force: args.includes("--force"),
     skipRtk: args.includes("--skip-rtk"),
     skipAgencyAgents: args.includes("--skip-agency-agents"),
@@ -622,49 +581,23 @@ async function main() {
     verbose: args.includes("--verbose")
   };
 
-  switch (command) {
-    case "init":
-      await initProject(options);
-      break;
-    case "install-skill":
-      installSkill();
-      break;
-    case "setup-agency-agents":
-      setupAgencyAgents();
-      break;
-    case "setup-rtk":
-      setupRtk();
-      break;
-    case "setup-local-config":
-      await setupLocalConfig({ force: true, verbose: options.verbose });
-      break;
-    case "check":
-      checkKit();
-      break;
-    case "guard":
-      guardProject();
-      break;
+  switch (cmd) {
+    case "init":         await initProject(opts); break;
+    case "install-skill": installSkill(); break;
+    case "setup-agency-agents": setupAgencyAgents(); break;
+    case "setup-rtk":    setupRtk(); break;
+    case "setup-local-config": await setupLocalConfig({ force: true, verbose: opts.verbose }); break;
+    case "check":        checkKit(); break;
+    case "guard":        guardProject(); break;
     case "update-check":
-    case "upgrade-check":
-      checkForUpdate();
-      break;
-    case "version": {
-      const pkg = readPackage();
-      log(pkg.version);
-      break;
-    }
-    case "help":
-    case "--help":
-    case "-h":
-      usage();
-      break;
-    default:
-      usage();
-      fail(`未知命令：${command}`);
+    case "upgrade-check": checkForUpdate(); break;
+    case "version":      log(readPackage().version); break;
+    case "help": case "--help": case "-h": usage(); break;
+    default: usage(); fail(`未知命令：${cmd}`);
   }
 }
 
-main().catch((error) => {
-  console.error(error && error.message ? error.message : error);
+main().catch((e) => {
+  console.error(e && e.message ? e.message : e);
   process.exit(1);
 });
