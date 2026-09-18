@@ -1,15 +1,62 @@
 ---
 name: ai-development-standards
-description: Use this skill when starting a new software project, setting up project development standards, reviewing whether code or plans meet engineering standards, creating AGENTS.md/docs/templates/quality gates, or orchestrating agency-agents specialists under a Chinese development governance baseline.
+description: Turn a user's idea into a complete, validated project through discovery, domain modeling, planning, implementation, verification, release, and handoff under a Chinese engineering governance baseline.
 ---
 
 # AI Development Standards
 
-Use this skill to apply the user's reusable project governance baseline: development standards, architecture boundaries, security rules, QA gates, release checks, and `agency-agents` orchestration.
+This is the end-to-end project builder. It combines project discovery, domain modeling, specifications, vertical-slice implementation, quality gates, release, and collaboration. The user's idea is the source of intent; never silently invent decisions that affect scope, behavior, security, cost, or release.
 
 Default output language is Simplified Chinese. Except for code, commands, paths, API fields, config keys, database fields, protocol names, library names, framework names, error codes, and unavoidable proper nouns, generated documents and progress reports must be written in Simplified Chinese unless the user explicitly asks for another language.
 
 ## Workflow
+
+Run `00-setup` once, then progress through the phase skills in order:
+
+```text
+00-setup
+  -> 01-discover
+  -> 02-model
+  -> 03-plan
+  -> 04-build
+  -> 05-verify
+  -> 06-release
+```
+
+Use `90-collaboration` whenever work crosses agents or people. A phase can call another phase, but it must return to its parent checkpoint.
+
+Every phase must:
+
+1. Read the current `AGENTS.md`, relevant `docs/process/` rules, `docs/CONTEXT.md`, `docs/PROJECT-STATE.md`, and approved specification.
+2. State its input, output, open decisions, and exit gate.
+3. Produce or update a durable artifact before moving on.
+4. Update `docs/PROJECT-STATE.md` or the repository's existing equivalent.
+5. Stop and ask the user when uncertainty changes scope, architecture, contracts, security, cost, or acceptance.
+
+The main session orchestrates by default, but if no suitable specialist worker is available it may implement directly. In that case it must keep the same artifacts, vertical slices, verification, and self-review requirements; it must not claim that a worker was used when it was not.
+
+### Phase map
+
+- `00-setup`: detect the repository, commands, conventions, and documentation layout.
+- `01-discover`: turn the idea into an approved problem brief and MVP boundary.
+- `02-model`: establish domain language, module boundaries, seams, and ADRs.
+- `03-plan`: create the spec, dependency-aware tickets, and execution order.
+- `04-build`: implement one vertical slice at a time with behavior-focused tests.
+- `05-verify`: validate the spec, standards, security, performance, and critical journeys.
+- `06-release`: prepare operations, deployment, rollback, documentation, and handoff.
+- `90-collaboration`: keep humans and agents aligned during delegation and interruption.
+
+Detailed phase instructions live under `skills/ai-development-standards/phases/`.
+
+## Completion definition
+
+The project is complete only when the agreed success criteria are demonstrated, critical journeys are verified, known limitations are documented, the diff passes spec and standards review, and another developer or agent can continue from the handoff.
+
+## Project state
+
+Maintain `docs/PROJECT-STATE.md` when the repository does not already have an equivalent status board. It must record the current phase and slice, confirmed decisions, open questions and owners, commands and results, risks, and next action.
+
+## Existing governance references
 
 1. Identify the project type: frontend, backend, full-stack, desktop, mobile, AI service, data service, or mixed.
 2. Read the relevant references:

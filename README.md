@@ -198,6 +198,32 @@ skills/ai-development-standards/
 使用 $ai-development-standards 审查当前功能是否满足开发规范。
 ```
 
+它不是一份孤立的规则清单，而是一套端到端项目流程。主入口会按顺序使用：
+
+```text
+skills/ai-development-standards/
+├── SKILL.md                 # 总编排入口
+├── phases/
+│   ├── 00-setup/            # 仓库探测和工作区初始化
+│   ├── 01-discover/         # 想法、问题、范围、成功标准
+│   ├── 02-model/            # 领域模型、边界、接口和 ADR
+│   ├── 03-plan/             # 规格、垂直切片、依赖和执行顺序
+│   ├── 04-build/            # 测试驱动的逐切片实现
+│   ├── 05-verify/           # 需求、质量、安全、性能和用户流程验证
+│   ├── 06-release/          # 部署、运维、回滚和交接
+│   └── 90-collaboration/    # 多人、多 agent 和中断恢复
+└── references/              # 详细规范、门禁和编排参考
+```
+
+最短使用方式：
+
+```text
+使用 $ai-development-standards，从我的想法开始，按完整项目流程推进。
+先执行 setup 和 discover；每个阶段通过门禁后再进入下一阶段。
+```
+
+如果没有可用的专业子智能体，主会话可以直接实现，但必须保留同样的项目文档、垂直切片、测试、质量门禁和自审要求，不能声称调用了不存在的 agent。
+
 ### 5. 安装 RTK 上下文压缩工具
 
 RTK 是推荐的可选增强工具，用于压缩命令输出、减少 token 噪声，不会改变项目代码产出逻辑。
@@ -252,11 +278,13 @@ docs/diagrams/project-workflow.png
 docs/diagrams/project-workflow.drawio
 ```
 
-默认工作流：
+端到端默认工作流：
 
 ```text
-上下文采集 -> 需求澄清 -> 架构设计 -> 实现 -> 二次自审 -> 测试验证 -> 安全审查 -> 发布交付 -> 工作流沉淀
+setup -> discover -> model -> plan -> build -> verify -> release
 ```
+
+其中 `verify` 会统一覆盖二次自审、测试验证、安全审查、性能检查和关键用户流程；`release` 会统一覆盖发布交付、运维、回滚和工作交接。更细的项目生命周期门禁仍由 `docs/process/PROJECT_LIFECYCLE.md` 约束。
 
 每个阶段按需调用已安装的 Codex Agent，例如：
 
@@ -274,7 +302,7 @@ docs/diagrams/project-workflow.drawio
 
 - 用户只和主会话交流。
 - 主会话是项目大脑，负责用户沟通、需求澄清、开发文档确认、任务拆分、技能路由、调度、整合、质量门禁和风险决策。
-- 项目型任务中，主会话默认不负责代码实现；UI、前端、后端、测试、安全、DevOps、文档等专项工作必须派发给对应专业子智能体。
+- 项目型任务中，主会话优先派发 UI、前端、后端、测试、安全、DevOps、文档等专项工作；如果没有合适的专业子智能体，可以由主会话直接实现，但必须遵守同样的契约、测试、质量门禁和自审流程。
 - 主会话必须按 `docs/process/PROJECT_LIFECYCLE.md` 推进阶段，按 `docs/agents/AGENT_ROUTER.md` 选择技能或 agent。
 - 有任何影响目标、范围、技术栈、接口、权限、安全、交付或验收的问题，主会话必须停下来问用户，不能自己脑补。
 - 在 Codex 中，子智能体默认作为后台子任务或后台 agent 执行，不默认创建用户可见的新窗口。
