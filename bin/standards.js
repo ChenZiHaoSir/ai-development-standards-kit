@@ -123,7 +123,7 @@ function checkForUpdate() {
   if (cmp < 0) {
     log("");
     log("发现新版本，建议升级：");
-    log(`  npm install -g ${pkg.name}@latest`);
+    log("  git pull --ff-only");
   } else if (cmp > 0) {
     log("");
     log("当前本地版本高于 npm latest，可能为本地开发版。");
@@ -174,11 +174,11 @@ async function configureGstackDesign(tool) {
     log(`检测到：${tool.name}`);
     log(tool.description);
     log(`配置文件将写入：${tool.configPath}`);
-    log("说明：此文件保存在用户主目录，不会进入项目仓库或 npm 包。");
+    log("说明：此文件保存在用户主目录，不会进入项目仓库或发布包。");
 
     const ans = await prompt.ask("是否现在配置 API Key？[y/N] ");
     if (!/^y(es)?$/i.test(ans)) {
-      log("已跳过。后续可运行：npx ai-development-standards-kit setup-local-config");
+      log("已跳过。后续可运行：node bin/standards.js setup-local-config");
       return false;
     }
 
@@ -231,21 +231,21 @@ async function setupLocalConfig(opts = {}) {
   if (needConfig.length === 0) {
     log("");
     log("未检测到需要配置密钥的工具。后续安装生图/部署/云服务后，可运行：");
-    log("  npx ai-development-standards-kit setup-local-config");
+    log("  node bin/standards.js setup-local-config");
     return;
   }
 
   if (!process.stdin.isTTY || !process.stdout.isTTY) {
     log("");
     log("当前非交互式终端，已跳过密钥输入。需配置时请运行：");
-    log("  npx ai-development-standards-kit setup-local-config");
+    log("  node bin/standards.js setup-local-config");
     return;
   }
 
   for (const tool of needConfig) {
     if (exists(tool.configPath) && !opts.force) {
       log(`${tool.name} 已有配置。如需重新配置请加 --force：`);
-      log(`  npx ai-development-standards-kit setup-local-config --force`);
+      log(`  node bin/standards.js setup-local-config --force`);
       continue;
     }
     if (tool.id === "gstack-design-image") {
@@ -449,10 +449,10 @@ async function initProject(opts = {}) {
   log("下一步操作：");
   log("");
   log("  1. 检查规范完整性（可选）：");
-  log("       npx ai-development-standards-kit guard");
+  log("       node bin/standards.js guard");
   log("");
   log("  2. 检查版本更新（可选）：");
-  log("       npx ai-development-standards-kit update-check");
+  log("       node bin/standards.js update-check");
   log("");
   log("  3. 开始项目开发：直接向 AI 描述你的项目需求，");
   log("     AI 会自动读取规范并严格按规范执行。");
@@ -520,9 +520,9 @@ function guardProject() {
   if (!ok) {
     log("");
     log("强制约束不完整，请运行：");
-    log("  npx ai-development-standards-kit init");
+    log("  node bin/standards.js init");
     log("如需覆盖旧规则，请运行：");
-    log("  npx ai-development-standards-kit init --force");
+    log("  node bin/standards.js init --force");
     process.exit(1);
   }
   log("");
@@ -542,13 +542,13 @@ function usage() {
   console.log("");
   log("常用命令：");
   log("");
-  log("  npx ai-development-standards-kit init");
+  log("  node bin/standards.js init");
   log("    在当前项目初始化 AI 开发规范。首次使用必须运行。");
   log("");
-  log("  npx ai-development-standards-kit guard");
+  log("  node bin/standards.js guard");
   log("    检查当前项目是否具备 AI 强制执行规范。");
   log("");
-  log("  npx ai-development-standards-kit setup-local-config");
+  log("  node bin/standards.js setup-local-config");
   log("    配置本机可选工具密钥（如生图 API Key）。");
   log("");
   log("其他命令：");

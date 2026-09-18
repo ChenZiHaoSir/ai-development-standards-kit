@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.29.1
+
+- 移除面向用户的全局 npm 安装入口，统一改为 Git 仓库克隆和本地 `node bin/standards.js` 命令。
+- 更新 README、启动引导和 CLI 帮助文本，避免继续引导用户使用临时包执行器安装。
+- `update-check` 的升级提示改为使用 Git 拉取仓库更新。
+
 ## 0.29.0
 
 - 将 Codex skill 重构为端到端项目交付流程：setup、discover、model、plan、build、verify、release 和 collaboration。
@@ -79,7 +85,7 @@
 
 ## 0.13.0
 
-- 新增 npm CLI 包配置，支持发布后通过 `npx ai-development-standards-kit init` 初始化项目。
+- 新增 npm CLI 包配置，支持发布后执行 CLI 初始化项目。
 - 新增 `bin/standards.js`，支持 `init`、`install-skill`、`setup-rtk`、`check` 和 `version` 命令。
 - 新增 LICENSE、`.npmignore` 和 npm 发布文件清单。
 

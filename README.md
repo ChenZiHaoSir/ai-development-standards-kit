@@ -51,32 +51,27 @@ chmod +x ./scripts/bootstrap-ai-standards.sh
 docs/AI_BOOTSTRAP.md
 ```
 
-### 2. 通过 npx 安装并使用短命令
+### 2. 通过 Git 仓库和本地脚本初始化
 
-安装命令保持使用正式包名：
-
-```bash
-npm install -g ai-development-standards-kit
-```
-
-安装后，在自己的项目根目录使用短命令：
+不使用全局 npm 安装。推荐克隆仓库后运行本地 CLI：
 
 ```bash
-standards init
+git clone https://github.com/ChenZiHaoSir/ai-development-standards-kit.git
+cd ai-development-standards-kit
+node bin/standards.js init
 ```
 
 常用选项：
 
 ```bash
-standards init --skip-rtk
-standards init --skip-agency-agents
-standards init --force
-standards init --skip-local-config
-standards check
-standards guard
-standards update-check
-standards setup-agency-agents
-standards setup-local-config
+node bin/standards.js init --skip-rtk
+node bin/standards.js init --skip-agency-agents
+node bin/standards.js init --force
+node bin/standards.js init --skip-local-config
+node bin/standards.js check
+node bin/standards.js guard
+node bin/standards.js setup-agency-agents
+node bin/standards.js setup-local-config
 ```
 
 `init` 会复制规范文档、AI 强制执行入口、状态看板、工作流模板和上游配置，安装 Codex skill，尝试安装 Codex 版 `agency-agents`，并尝试初始化 RTK。默认不会覆盖已存在文件，除非传入 `--force`。
@@ -137,15 +132,6 @@ OpenAI 官方兼容配置：https://api.openai.com
 ```
 
 如果是 AI 自动安装，AI 必须先询问用户是否配置；用户跳过时不能阻塞项目初始化。
-
-也可以不安装，直接使用 npx：
-
-```bash
-npx ai-development-standards-kit init
-npx ai-development-standards-kit guard
-npx ai-development-standards-kit update-check
-npx ai-development-standards-kit setup-local-config
-```
 
 ### 3. 作为新项目规范模板
 
